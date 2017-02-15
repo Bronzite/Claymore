@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl" Namespace="ClaymoreDataModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2005">
+        <EntityContainer Name="ClaymoreDataModelTargetContainer" >
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="ClaymoreDataModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="ClaymoreDataModelContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Characters" EntityType="ClaymoreDataModel.Character" />
+          <EntitySet Name="Sessions" EntityType="ClaymoreDataModel.Session" />
+          <AssociationSet Name="Attendance" Association="ClaymoreDataModel.Attendance">
+            <End Role="Session" EntitySet="Sessions" />
+            <End Role="Character" EntitySet="Characters" />
+          </AssociationSet>
+          <EntitySet Name="XPAssets" EntityType="ClaymoreDataModel.XPAsset" />
+          <AssociationSet Name="CharacterXPAsset" Association="ClaymoreDataModel.CharacterXPAsset">
+            <End Role="Character" EntitySet="Characters" />
+            <End Role="XPAsset" EntitySet="XPAssets" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Character">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <Property Name="Birthdate" Type="DateTime" Nullable="true" />
+          <NavigationProperty Name="Sessions" Relationship="ClaymoreDataModel.Attendance" FromRole="Character" ToRole="Session" />
+          <NavigationProperty Name="XPAssets" Relationship="ClaymoreDataModel.CharacterXPAsset" FromRole="Character" ToRole="XPAsset" />
+        </EntityType>
+        <EntityType Name="Session">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <Property Name="SessionDate" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="Characters" Relationship="ClaymoreDataModel.Attendance" FromRole="Session" ToRole="Character" />
+        </EntityType>
+        <Association Name="Attendance">
+          <End Type="ClaymoreDataModel.Session" Role="Session" Multiplicity="*" />
+          <End Type="ClaymoreDataModel.Character" Role="Character" Multiplicity="*" />
+        </Association>
+        <EntityType Name="XPAsset">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <NavigationProperty Name="Character" Relationship="ClaymoreDataModel.CharacterXPAsset" FromRole="XPAsset" ToRole="Character" />
+          <Property Name="CharacterId" Type="Guid" Nullable="false" />
+          <Property Name="AllocatedXP" Type="Int32" Nullable="true" />
+          <Property Name="Name" Type="String" Nullable="false" />
+        </EntityType>
+        <Association Name="CharacterXPAsset">
+          <End Type="ClaymoreDataModel.Character" Role="Character" Multiplicity="1" />
+          <End Type="ClaymoreDataModel.XPAsset" Role="XPAsset" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Character">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="XPAsset">
+              <PropertyRef Name="CharacterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Attribute" BaseType="ClaymoreDataModel.XPAsset" >
+          <Property Name="LinkBonus" Type="String" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Skill" BaseType="ClaymoreDataModel.XPAsset" >
+          <Property Name="PrimaryLinkAttribute" Type="String" Nullable="false" />
+          <Property Name="SecondaryLinkAttribute" Type="String" Nullable="true" />
+          <Property Name="Simple" Type="Boolean" Nullable="false" />
+          <Property Name="Basic" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Trait" BaseType="ClaymoreDataModel.XPAsset" >
+          <Property Name="Level" Type="Int32" Nullable="true" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs" Space="C-S">
+        <Alias Key="Model" Value="ClaymoreDataModel" />
+        <Alias Key="Target" Value="ClaymoreDataModel.Store" />
+        <EntityContainerMapping CdmEntityContainer="ClaymoreDataModelContainer" StorageEntityContainer="ClaymoreDataModelTargetContainer">
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
