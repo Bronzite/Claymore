@@ -24,6 +24,20 @@
             <End Role="Character" EntitySet="Characters" />
             <End Role="XPAsset" EntitySet="XPAssets" />
           </AssociationSet>
+          <EntitySet Name="XPTransactions" EntityType="ClaymoreDataModel.XPTransaction" />
+          <EntitySet Name="XPChanges" EntityType="ClaymoreDataModel.XPChange" />
+          <AssociationSet Name="XPChangeXPTransaction" Association="ClaymoreDataModel.XPChangeXPTransaction">
+            <End Role="XPChange" EntitySet="XPChanges" />
+            <End Role="XPTransaction" EntitySet="XPTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="XPChangeXPAsset" Association="ClaymoreDataModel.XPChangeXPAsset">
+            <End Role="XPChange" EntitySet="XPChanges" />
+            <End Role="XPAsset" EntitySet="XPAssets" />
+          </AssociationSet>
+          <AssociationSet Name="XPTransactionSession" Association="ClaymoreDataModel.XPTransactionSession">
+            <End Role="XPTransaction" EntitySet="XPTransactions" />
+            <End Role="Session" EntitySet="Sessions" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Character">
           <Key>
@@ -43,6 +57,8 @@
           <Property Name="Name" Type="String" Nullable="false" />
           <Property Name="SessionDate" Type="DateTime" Nullable="false" />
           <NavigationProperty Name="Characters" Relationship="ClaymoreDataModel.Attendance" FromRole="Session" ToRole="Character" />
+          <NavigationProperty Name="XPTransaction" Relationship="ClaymoreDataModel.XPTransactionSession" FromRole="Session" ToRole="XPTransaction" />
+          <Property Name="XPTransactionId" Type="Guid" Nullable="true" />
         </EntityType>
         <Association Name="Attendance">
           <End Type="ClaymoreDataModel.Session" Role="Session" Multiplicity="*" />
@@ -57,6 +73,7 @@
           <Property Name="CharacterId" Type="Guid" Nullable="false" />
           <Property Name="AllocatedXP" Type="Int32" Nullable="true" />
           <Property Name="Name" Type="String" Nullable="false" />
+          <NavigationProperty Name="XPChanges" Relationship="ClaymoreDataModel.XPChangeXPAsset" FromRole="XPAsset" ToRole="XPChange" />
         </EntityType>
         <Association Name="CharacterXPAsset">
           <End Type="ClaymoreDataModel.Character" Role="Character" Multiplicity="1" />
@@ -82,6 +99,62 @@
         <EntityType Name="Trait" BaseType="ClaymoreDataModel.XPAsset" >
           <Property Name="Level" Type="Int32" Nullable="true" />
         </EntityType>
+        <EntityType Name="XPTransaction">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <NavigationProperty Name="Changes" Relationship="ClaymoreDataModel.XPChangeXPTransaction" FromRole="XPTransaction" ToRole="XPChange" />
+          <NavigationProperty Name="Sessions" Relationship="ClaymoreDataModel.XPTransactionSession" FromRole="XPTransaction" ToRole="Session" />
+        </EntityType>
+        <EntityType Name="XPChange">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <NavigationProperty Name="Transaction" Relationship="ClaymoreDataModel.XPChangeXPTransaction" FromRole="XPChange" ToRole="XPTransaction" />
+          <Property Name="XPTransactionId" Type="Guid" Nullable="false" />
+          <Property Name="Amount" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="XPAsset" Relationship="ClaymoreDataModel.XPChangeXPAsset" FromRole="XPChange" ToRole="XPAsset" />
+          <Property Name="XPAssetId" Type="Guid" Nullable="false" />
+        </EntityType>
+        <Association Name="XPChangeXPTransaction">
+          <End Type="ClaymoreDataModel.XPChange" Role="XPChange" Multiplicity="*" />
+          <End Type="ClaymoreDataModel.XPTransaction" Role="XPTransaction" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="XPTransaction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="XPChange">
+              <PropertyRef Name="XPTransactionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="XPChangeXPAsset">
+          <End Type="ClaymoreDataModel.XPChange" Role="XPChange" Multiplicity="*" />
+          <End Type="ClaymoreDataModel.XPAsset" Role="XPAsset" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="XPAsset">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="XPChange">
+              <PropertyRef Name="XPAssetId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="EdgePoints" BaseType="ClaymoreDataModel.XPAsset" />
+        <Association Name="XPTransactionSession">
+          <End Type="ClaymoreDataModel.XPTransaction" Role="XPTransaction" Multiplicity="0..1" />
+          <End Type="ClaymoreDataModel.Session" Role="Session" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="XPTransaction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Session">
+              <PropertyRef Name="XPTransactionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
