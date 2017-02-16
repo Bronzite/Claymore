@@ -88,6 +88,7 @@
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
   <EntityType Name="XPChanges">
     <Key>
@@ -362,6 +363,7 @@
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <NavigationProperty Name="Changes" Relationship="Claymore.Models.XPChangeXPTransaction" FromRole="XPTransaction" ToRole="XPChange" />
           <NavigationProperty Name="Sessions" Relationship="Claymore.Models.XPTransactionSession" FromRole="XPTransaction" ToRole="Session" />
+          <Property Name="Description" Type="String" Nullable="false" />
         </EntityType>
         <EntityType Name="XPChange">
           <Key>
@@ -476,6 +478,7 @@
       <EntityTypeMapping TypeName="IsTypeOf(Claymore.Models.XPTransaction)">
         <MappingFragment StoreEntitySet="XPTransactions">
           <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
