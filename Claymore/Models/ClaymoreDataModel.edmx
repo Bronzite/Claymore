@@ -4,37 +4,293 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl" Namespace="ClaymoreDataModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2005">
-        <EntityContainer Name="ClaymoreDataModelTargetContainer" >
-        </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+    <Schema Namespace="Claymore.Models.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="ClaymoreModelsStoreContainer">
+    <EntitySet Name="Characters" EntityType="Claymore.Models.Store.Characters" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Sessions" EntityType="Claymore.Models.Store.Sessions" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="XPAssets" EntityType="Claymore.Models.Store.XPAssets" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="XPTransactions" EntityType="Claymore.Models.Store.XPTransactions" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="XPChanges" EntityType="Claymore.Models.Store.XPChanges" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="XPAssets_Attribute" EntityType="Claymore.Models.Store.XPAssets_Attribute" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="XPAssets_Skill" EntityType="Claymore.Models.Store.XPAssets_Skill" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="XPAssets_Trait" EntityType="Claymore.Models.Store.XPAssets_Trait" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="XPAssets_EdgePoints" EntityType="Claymore.Models.Store.XPAssets_EdgePoints" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Attendance" EntityType="Claymore.Models.Store.Attendance" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="FK_Attendance_Session" Association="Claymore.Models.Store.FK_Attendance_Session">
+      <End Role="Session" EntitySet="Sessions" />
+      <End Role="Attendance" EntitySet="Attendance" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Attendance_Character" Association="Claymore.Models.Store.FK_Attendance_Character">
+      <End Role="Character" EntitySet="Characters" />
+      <End Role="Attendance" EntitySet="Attendance" />
+    </AssociationSet>
+    <AssociationSet Name="CharacterXPAsset" Association="Claymore.Models.Store.CharacterXPAsset">
+      <End Role="Character" EntitySet="Characters" />
+      <End Role="XPAsset" EntitySet="XPAssets" />
+    </AssociationSet>
+    <AssociationSet Name="XPChangeXPTransaction" Association="Claymore.Models.Store.XPChangeXPTransaction">
+      <End Role="XPChange" EntitySet="XPChanges" />
+      <End Role="XPTransaction" EntitySet="XPTransactions" />
+    </AssociationSet>
+    <AssociationSet Name="XPChangeXPAsset" Association="Claymore.Models.Store.XPChangeXPAsset">
+      <End Role="XPChange" EntitySet="XPChanges" />
+      <End Role="XPAsset" EntitySet="XPAssets" />
+    </AssociationSet>
+    <AssociationSet Name="XPTransactionSession" Association="Claymore.Models.Store.XPTransactionSession">
+      <End Role="XPTransaction" EntitySet="XPTransactions" />
+      <End Role="Session" EntitySet="Sessions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Attribute_inherits_XPAsset" Association="Claymore.Models.Store.FK_Attribute_inherits_XPAsset">
+      <End Role="XPAsset" EntitySet="XPAssets" />
+      <End Role="Attribute" EntitySet="XPAssets_Attribute" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Skill_inherits_XPAsset" Association="Claymore.Models.Store.FK_Skill_inherits_XPAsset">
+      <End Role="XPAsset" EntitySet="XPAssets" />
+      <End Role="Skill" EntitySet="XPAssets_Skill" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Trait_inherits_XPAsset" Association="Claymore.Models.Store.FK_Trait_inherits_XPAsset">
+      <End Role="XPAsset" EntitySet="XPAssets" />
+      <End Role="Trait" EntitySet="XPAssets_Trait" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EdgePoints_inherits_XPAsset" Association="Claymore.Models.Store.FK_EdgePoints_inherits_XPAsset">
+      <End Role="XPAsset" EntitySet="XPAssets" />
+      <End Role="EdgePoints" EntitySet="XPAssets_EdgePoints" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Characters">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Birthdate" Type="datetime" Nullable="true" />
+  </EntityType>
+  <EntityType Name="Sessions">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="SessionDate" Type="datetime" Nullable="false" />
+    <Property Name="XPTransactionId" Type="uniqueidentifier" Nullable="true" />
+  </EntityType>
+  <EntityType Name="XPAssets">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="CharacterId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="AllocatedXP" Type="int" Nullable="true" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="XPTransactions">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="XPChanges">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="XPTransactionId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Amount" Type="int" Nullable="false" />
+    <Property Name="XPAssetId" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="XPAssets_Attribute">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="LinkBonus" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="XPAssets_Skill">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="PrimaryLinkAttribute" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="SecondaryLinkAttribute" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Simple" Type="bit" Nullable="false" />
+    <Property Name="Basic" Type="bit" Nullable="false" />
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="XPAssets_Trait">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Level" Type="int" Nullable="true" />
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="XPAssets_EdgePoints">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Attendance">
+    <Key>
+      <PropertyRef Name="Sessions_Id" />
+      <PropertyRef Name="Characters_Id" />
+    </Key>
+    <Property Name="Sessions_Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Characters_Id" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <Association Name="CharacterXPAsset">
+    <End Role="Character" Type="Claymore.Models.Store.Characters" Multiplicity="1" />
+    <End Role="XPAsset" Type="Claymore.Models.Store.XPAssets" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Character">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="XPAsset">
+        <PropertyRef Name="CharacterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="XPChangeXPTransaction">
+    <End Role="XPChange" Type="Claymore.Models.Store.XPChanges" Multiplicity="*" />
+    <End Role="XPTransaction" Type="Claymore.Models.Store.XPTransactions" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="XPTransaction">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="XPChange">
+        <PropertyRef Name="XPTransactionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="XPChangeXPAsset">
+    <End Role="XPChange" Type="Claymore.Models.Store.XPChanges" Multiplicity="*" />
+    <End Role="XPAsset" Type="Claymore.Models.Store.XPAssets" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="XPAsset">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="XPChange">
+        <PropertyRef Name="XPAssetId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="XPTransactionSession">
+    <End Role="XPTransaction" Type="Claymore.Models.Store.XPTransactions" Multiplicity="0..1" />
+    <End Role="Session" Type="Claymore.Models.Store.Sessions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="XPTransaction">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Session">
+        <PropertyRef Name="XPTransactionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Attendance_Session">
+    <End Role="Session" Type="Claymore.Models.Store.Sessions" Multiplicity="1" />
+    <End Role="Attendance" Type="Claymore.Models.Store.Attendance" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Session">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Attendance">
+        <PropertyRef Name="Sessions_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Attendance_Character">
+    <End Role="Attendance" Type="Claymore.Models.Store.Attendance" Multiplicity="*" />
+    <End Role="Character" Type="Claymore.Models.Store.Characters" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Character">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Attendance">
+        <PropertyRef Name="Characters_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Attribute_inherits_XPAsset">
+    <End Role="XPAsset" Type="Claymore.Models.Store.XPAssets" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Attribute" Type="Claymore.Models.Store.XPAssets_Attribute" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="XPAsset">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Attribute">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Skill_inherits_XPAsset">
+    <End Role="XPAsset" Type="Claymore.Models.Store.XPAssets" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Skill" Type="Claymore.Models.Store.XPAssets_Skill" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="XPAsset">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Skill">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Trait_inherits_XPAsset">
+    <End Role="XPAsset" Type="Claymore.Models.Store.XPAssets" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Trait" Type="Claymore.Models.Store.XPAssets_Trait" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="XPAsset">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Trait">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EdgePoints_inherits_XPAsset">
+    <End Role="XPAsset" Type="Claymore.Models.Store.XPAssets" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="EdgePoints" Type="Claymore.Models.Store.XPAssets_EdgePoints" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="XPAsset">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="EdgePoints">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="ClaymoreDataModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="Claymore.Models" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
         <EntityContainer Name="ClaymoreDataModelContainer" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Characters" EntityType="ClaymoreDataModel.Character" />
-          <EntitySet Name="Sessions" EntityType="ClaymoreDataModel.Session" />
-          <AssociationSet Name="Attendance" Association="ClaymoreDataModel.Attendance">
+          <EntitySet Name="Characters" EntityType="Claymore.Models.Character" />
+          <EntitySet Name="Sessions" EntityType="Claymore.Models.Session" />
+          <AssociationSet Name="Attendance" Association="Claymore.Models.Attendance">
             <End Role="Session" EntitySet="Sessions" />
             <End Role="Character" EntitySet="Characters" />
           </AssociationSet>
-          <EntitySet Name="XPAssets" EntityType="ClaymoreDataModel.XPAsset" />
-          <AssociationSet Name="CharacterXPAsset" Association="ClaymoreDataModel.CharacterXPAsset">
+          <EntitySet Name="XPAssets" EntityType="Claymore.Models.XPAsset" />
+          <AssociationSet Name="CharacterXPAsset" Association="Claymore.Models.CharacterXPAsset">
             <End Role="Character" EntitySet="Characters" />
             <End Role="XPAsset" EntitySet="XPAssets" />
           </AssociationSet>
-          <EntitySet Name="XPTransactions" EntityType="ClaymoreDataModel.XPTransaction" />
-          <EntitySet Name="XPChanges" EntityType="ClaymoreDataModel.XPChange" />
-          <AssociationSet Name="XPChangeXPTransaction" Association="ClaymoreDataModel.XPChangeXPTransaction">
+          <EntitySet Name="XPTransactions" EntityType="Claymore.Models.XPTransaction" />
+          <EntitySet Name="XPChanges" EntityType="Claymore.Models.XPChange" />
+          <AssociationSet Name="XPChangeXPTransaction" Association="Claymore.Models.XPChangeXPTransaction">
             <End Role="XPChange" EntitySet="XPChanges" />
             <End Role="XPTransaction" EntitySet="XPTransactions" />
           </AssociationSet>
-          <AssociationSet Name="XPChangeXPAsset" Association="ClaymoreDataModel.XPChangeXPAsset">
+          <AssociationSet Name="XPChangeXPAsset" Association="Claymore.Models.XPChangeXPAsset">
             <End Role="XPChange" EntitySet="XPChanges" />
             <End Role="XPAsset" EntitySet="XPAssets" />
           </AssociationSet>
-          <AssociationSet Name="XPTransactionSession" Association="ClaymoreDataModel.XPTransactionSession">
+          <AssociationSet Name="XPTransactionSession" Association="Claymore.Models.XPTransactionSession">
             <End Role="XPTransaction" EntitySet="XPTransactions" />
             <End Role="Session" EntitySet="Sessions" />
           </AssociationSet>
@@ -46,8 +302,8 @@
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <Property Name="Name" Type="String" Nullable="false" />
           <Property Name="Birthdate" Type="DateTime" Nullable="true" />
-          <NavigationProperty Name="Sessions" Relationship="ClaymoreDataModel.Attendance" FromRole="Character" ToRole="Session" />
-          <NavigationProperty Name="XPAssets" Relationship="ClaymoreDataModel.CharacterXPAsset" FromRole="Character" ToRole="XPAsset" />
+          <NavigationProperty Name="Sessions" Relationship="Claymore.Models.Attendance" FromRole="Character" ToRole="Session" />
+          <NavigationProperty Name="XPAssets" Relationship="Claymore.Models.CharacterXPAsset" FromRole="Character" ToRole="XPAsset" />
         </EntityType>
         <EntityType Name="Session">
           <Key>
@@ -56,28 +312,28 @@
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <Property Name="Name" Type="String" Nullable="false" />
           <Property Name="SessionDate" Type="DateTime" Nullable="false" />
-          <NavigationProperty Name="Characters" Relationship="ClaymoreDataModel.Attendance" FromRole="Session" ToRole="Character" />
-          <NavigationProperty Name="XPTransaction" Relationship="ClaymoreDataModel.XPTransactionSession" FromRole="Session" ToRole="XPTransaction" />
+          <NavigationProperty Name="Characters" Relationship="Claymore.Models.Attendance" FromRole="Session" ToRole="Character" />
+          <NavigationProperty Name="XPTransaction" Relationship="Claymore.Models.XPTransactionSession" FromRole="Session" ToRole="XPTransaction" />
           <Property Name="XPTransactionId" Type="Guid" Nullable="true" />
         </EntityType>
         <Association Name="Attendance">
-          <End Type="ClaymoreDataModel.Session" Role="Session" Multiplicity="*" />
-          <End Type="ClaymoreDataModel.Character" Role="Character" Multiplicity="*" />
+          <End Type="Claymore.Models.Session" Role="Session" Multiplicity="*" />
+          <End Type="Claymore.Models.Character" Role="Character" Multiplicity="*" />
         </Association>
         <EntityType Name="XPAsset">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
-          <NavigationProperty Name="Character" Relationship="ClaymoreDataModel.CharacterXPAsset" FromRole="XPAsset" ToRole="Character" />
+          <NavigationProperty Name="Character" Relationship="Claymore.Models.CharacterXPAsset" FromRole="XPAsset" ToRole="Character" />
           <Property Name="CharacterId" Type="Guid" Nullable="false" />
           <Property Name="AllocatedXP" Type="Int32" Nullable="true" />
           <Property Name="Name" Type="String" Nullable="false" />
-          <NavigationProperty Name="XPChanges" Relationship="ClaymoreDataModel.XPChangeXPAsset" FromRole="XPAsset" ToRole="XPChange" />
+          <NavigationProperty Name="XPChanges" Relationship="Claymore.Models.XPChangeXPAsset" FromRole="XPAsset" ToRole="XPChange" />
         </EntityType>
         <Association Name="CharacterXPAsset">
-          <End Type="ClaymoreDataModel.Character" Role="Character" Multiplicity="1" />
-          <End Type="ClaymoreDataModel.XPAsset" Role="XPAsset" Multiplicity="*" />
+          <End Type="Claymore.Models.Character" Role="Character" Multiplicity="1" />
+          <End Type="Claymore.Models.XPAsset" Role="XPAsset" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Character">
               <PropertyRef Name="Id" />
@@ -87,16 +343,16 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Attribute" BaseType="ClaymoreDataModel.XPAsset" >
+        <EntityType Name="Attribute" BaseType="Claymore.Models.XPAsset" >
           <Property Name="LinkBonus" Type="String" Nullable="false" />
         </EntityType>
-        <EntityType Name="Skill" BaseType="ClaymoreDataModel.XPAsset" >
+        <EntityType Name="Skill" BaseType="Claymore.Models.XPAsset" >
           <Property Name="PrimaryLinkAttribute" Type="String" Nullable="false" />
           <Property Name="SecondaryLinkAttribute" Type="String" Nullable="true" />
           <Property Name="Simple" Type="Boolean" Nullable="false" />
           <Property Name="Basic" Type="Boolean" Nullable="false" />
         </EntityType>
-        <EntityType Name="Trait" BaseType="ClaymoreDataModel.XPAsset" >
+        <EntityType Name="Trait" BaseType="Claymore.Models.XPAsset" >
           <Property Name="Level" Type="Int32" Nullable="true" />
         </EntityType>
         <EntityType Name="XPTransaction">
@@ -104,23 +360,23 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
-          <NavigationProperty Name="Changes" Relationship="ClaymoreDataModel.XPChangeXPTransaction" FromRole="XPTransaction" ToRole="XPChange" />
-          <NavigationProperty Name="Sessions" Relationship="ClaymoreDataModel.XPTransactionSession" FromRole="XPTransaction" ToRole="Session" />
+          <NavigationProperty Name="Changes" Relationship="Claymore.Models.XPChangeXPTransaction" FromRole="XPTransaction" ToRole="XPChange" />
+          <NavigationProperty Name="Sessions" Relationship="Claymore.Models.XPTransactionSession" FromRole="XPTransaction" ToRole="Session" />
         </EntityType>
         <EntityType Name="XPChange">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
-          <NavigationProperty Name="Transaction" Relationship="ClaymoreDataModel.XPChangeXPTransaction" FromRole="XPChange" ToRole="XPTransaction" />
+          <NavigationProperty Name="Transaction" Relationship="Claymore.Models.XPChangeXPTransaction" FromRole="XPChange" ToRole="XPTransaction" />
           <Property Name="XPTransactionId" Type="Guid" Nullable="false" />
           <Property Name="Amount" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="XPAsset" Relationship="ClaymoreDataModel.XPChangeXPAsset" FromRole="XPChange" ToRole="XPAsset" />
+          <NavigationProperty Name="XPAsset" Relationship="Claymore.Models.XPChangeXPAsset" FromRole="XPChange" ToRole="XPAsset" />
           <Property Name="XPAssetId" Type="Guid" Nullable="false" />
         </EntityType>
         <Association Name="XPChangeXPTransaction">
-          <End Type="ClaymoreDataModel.XPChange" Role="XPChange" Multiplicity="*" />
-          <End Type="ClaymoreDataModel.XPTransaction" Role="XPTransaction" Multiplicity="1" />
+          <End Type="Claymore.Models.XPChange" Role="XPChange" Multiplicity="*" />
+          <End Type="Claymore.Models.XPTransaction" Role="XPTransaction" Multiplicity="1" />
           <ReferentialConstraint>
             <Principal Role="XPTransaction">
               <PropertyRef Name="Id" />
@@ -131,8 +387,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="XPChangeXPAsset">
-          <End Type="ClaymoreDataModel.XPChange" Role="XPChange" Multiplicity="*" />
-          <End Type="ClaymoreDataModel.XPAsset" Role="XPAsset" Multiplicity="1" />
+          <End Type="Claymore.Models.XPChange" Role="XPChange" Multiplicity="*" />
+          <End Type="Claymore.Models.XPAsset" Role="XPAsset" Multiplicity="1" />
           <ReferentialConstraint>
             <Principal Role="XPAsset">
               <PropertyRef Name="Id" />
@@ -142,10 +398,10 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="EdgePoints" BaseType="ClaymoreDataModel.XPAsset" />
+        <EntityType Name="EdgePoints" BaseType="Claymore.Models.XPAsset" />
         <Association Name="XPTransactionSession">
-          <End Type="ClaymoreDataModel.XPTransaction" Role="XPTransaction" Multiplicity="0..1" />
-          <End Type="ClaymoreDataModel.Session" Role="Session" Multiplicity="*" />
+          <End Type="Claymore.Models.XPTransaction" Role="XPTransaction" Multiplicity="0..1" />
+          <End Type="Claymore.Models.Session" Role="Session" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="XPTransaction">
               <PropertyRef Name="Id" />
@@ -159,13 +415,90 @@
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
-      <Mapping xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs" Space="C-S">
-        <Alias Key="Model" Value="ClaymoreDataModel" />
-        <Alias Key="Target" Value="ClaymoreDataModel.Store" />
-        <EntityContainerMapping CdmEntityContainer="ClaymoreDataModelContainer" StorageEntityContainer="ClaymoreDataModelTargetContainer">
-        </EntityContainerMapping>
-      </Mapping>
-    </edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ClaymoreModelsStoreContainer" CdmEntityContainer="ClaymoreDataModelContainer">
+    <EntitySetMapping Name="Characters">
+      <EntityTypeMapping TypeName="IsTypeOf(Claymore.Models.Character)">
+        <MappingFragment StoreEntitySet="Characters">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Birthdate" ColumnName="Birthdate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Sessions">
+      <EntityTypeMapping TypeName="IsTypeOf(Claymore.Models.Session)">
+        <MappingFragment StoreEntitySet="Sessions">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="SessionDate" ColumnName="SessionDate" />
+          <ScalarProperty Name="XPTransactionId" ColumnName="XPTransactionId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="XPAssets">
+      <EntityTypeMapping TypeName="IsTypeOf(Claymore.Models.XPAsset)">
+        <MappingFragment StoreEntitySet="XPAssets">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="CharacterId" ColumnName="CharacterId" />
+          <ScalarProperty Name="AllocatedXP" ColumnName="AllocatedXP" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(Claymore.Models.Attribute)">
+        <MappingFragment StoreEntitySet="XPAssets_Attribute">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="LinkBonus" ColumnName="LinkBonus" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(Claymore.Models.Skill)">
+        <MappingFragment StoreEntitySet="XPAssets_Skill">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="PrimaryLinkAttribute" ColumnName="PrimaryLinkAttribute" />
+          <ScalarProperty Name="SecondaryLinkAttribute" ColumnName="SecondaryLinkAttribute" />
+          <ScalarProperty Name="Simple" ColumnName="Simple" />
+          <ScalarProperty Name="Basic" ColumnName="Basic" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(Claymore.Models.Trait)">
+        <MappingFragment StoreEntitySet="XPAssets_Trait">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Level" ColumnName="Level" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(Claymore.Models.EdgePoints)">
+        <MappingFragment StoreEntitySet="XPAssets_EdgePoints">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="XPTransactions">
+      <EntityTypeMapping TypeName="IsTypeOf(Claymore.Models.XPTransaction)">
+        <MappingFragment StoreEntitySet="XPTransactions">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="XPChanges">
+      <EntityTypeMapping TypeName="IsTypeOf(Claymore.Models.XPChange)">
+        <MappingFragment StoreEntitySet="XPChanges">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="XPTransactionId" ColumnName="XPTransactionId" />
+          <ScalarProperty Name="Amount" ColumnName="Amount" />
+          <ScalarProperty Name="XPAssetId" ColumnName="XPAssetId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="Attendance" TypeName="Claymore.Models.Attendance" StoreEntitySet="Attendance">
+      <EndProperty Name="Session">
+        <ScalarProperty Name="Id" ColumnName="Sessions_Id" />
+      </EndProperty>
+      <EndProperty Name="Character">
+        <ScalarProperty Name="Id" ColumnName="Characters_Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
   </edmx:Runtime>
   <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
@@ -179,6 +512,7 @@
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
         <DesignerProperty Name="EnablePluralization" Value="True" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
       </DesignerInfoPropertySet>
     </edmx:Options>
     <!-- Diagram content (shape and connector positions) -->
