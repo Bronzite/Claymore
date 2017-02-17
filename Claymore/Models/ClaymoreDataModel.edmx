@@ -11,11 +11,13 @@
     <EntitySet Name="XPAssets" EntityType="Claymore.Models.Store.XPAssets" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="XPTransactions" EntityType="Claymore.Models.Store.XPTransactions" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="XPChanges" EntityType="Claymore.Models.Store.XPChanges" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Campaigns" EntityType="Claymore.Models.Store.Campaigns" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="XPAssets_Attribute" EntityType="Claymore.Models.Store.XPAssets_Attribute" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="XPAssets_Skill" EntityType="Claymore.Models.Store.XPAssets_Skill" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="XPAssets_Trait" EntityType="Claymore.Models.Store.XPAssets_Trait" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="XPAssets_EdgePoints" EntityType="Claymore.Models.Store.XPAssets_EdgePoints" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Attendance" EntityType="Claymore.Models.Store.Attendance" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="CampaignSession" EntityType="Claymore.Models.Store.CampaignSession" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="FK_Attendance_Session" Association="Claymore.Models.Store.FK_Attendance_Session">
       <End Role="Session" EntitySet="Sessions" />
       <End Role="Attendance" EntitySet="Attendance" />
@@ -39,6 +41,14 @@
     <AssociationSet Name="CharacterXPAsset" Association="Claymore.Models.Store.CharacterXPAsset">
       <End Role="Character" EntitySet="Characters" />
       <End Role="XPAsset" EntitySet="XPAssets" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CampaignSession_Campaign" Association="Claymore.Models.Store.FK_CampaignSession_Campaign">
+      <End Role="Campaign" EntitySet="Campaigns" />
+      <End Role="CampaignSession" EntitySet="CampaignSession" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CampaignSession_Session" Association="Claymore.Models.Store.FK_CampaignSession_Session">
+      <End Role="Session" EntitySet="Sessions" />
+      <End Role="CampaignSession" EntitySet="CampaignSession" />
     </AssociationSet>
     <AssociationSet Name="FK_Attribute_inherits_XPAsset" Association="Claymore.Models.Store.FK_Attribute_inherits_XPAsset">
       <End Role="XPAsset" EntitySet="XPAssets" />
@@ -74,6 +84,8 @@
     <Property Name="SessionDate" Type="datetime" Nullable="false" />
     <Property Name="XPTransactionId" Type="uniqueidentifier" Nullable="true" />
     <Property Name="BaseXP" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="InUniverseStartDate" Type="datetime" Nullable="true" />
+    <Property Name="InUniverseEndDate" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="XPAssets">
     <Key>
@@ -100,6 +112,14 @@
     <Property Name="XPTransactionId" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Amount" Type="int" Nullable="false" />
     <Property Name="XPAssetId" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Campaigns">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="BaseXP" Type="int" Nullable="true" />
   </EntityType>
   <EntityType Name="XPAssets_Attribute">
     <Key>
@@ -138,6 +158,14 @@
     </Key>
     <Property Name="Sessions_Id" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Characters_Id" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CampaignSession">
+    <Key>
+      <PropertyRef Name="Campaigns_Id" />
+      <PropertyRef Name="Sessions_Id" />
+    </Key>
+    <Property Name="Campaigns_Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Sessions_Id" Type="uniqueidentifier" Nullable="false" />
   </EntityType>
   <Association Name="XPChangeXPTransaction">
     <End Role="XPChange" Type="Claymore.Models.Store.XPChanges" Multiplicity="*" />
@@ -208,6 +236,30 @@
       </Principal>
       <Dependent Role="Attendance">
         <PropertyRef Name="Characters_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CampaignSession_Campaign">
+    <End Role="Campaign" Type="Claymore.Models.Store.Campaigns" Multiplicity="1" />
+    <End Role="CampaignSession" Type="Claymore.Models.Store.CampaignSession" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Campaign">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CampaignSession">
+        <PropertyRef Name="Campaigns_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CampaignSession_Session">
+    <End Role="CampaignSession" Type="Claymore.Models.Store.CampaignSession" Multiplicity="*" />
+    <End Role="Session" Type="Claymore.Models.Store.Sessions" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Session">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CampaignSession">
+        <PropertyRef Name="Sessions_Id" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -297,6 +349,11 @@
             <End Role="Character" EntitySet="Characters" />
             <End Role="XPAsset" EntitySet="XPAssets" />
           </AssociationSet>
+          <EntitySet Name="Campaigns" EntityType="Claymore.Models.Campaign" />
+          <AssociationSet Name="CampaignSession" Association="Claymore.Models.CampaignSession">
+            <End Role="Campaign" EntitySet="Campaigns" />
+            <End Role="Session" EntitySet="Sessions" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Character">
           <Key>
@@ -319,6 +376,9 @@
           <NavigationProperty Name="XPTransaction" Relationship="Claymore.Models.XPTransactionSession" FromRole="Session" ToRole="XPTransaction" />
           <Property Name="XPTransactionId" Type="Guid" Nullable="true" />
           <Property Name="BaseXP" Type="String" Nullable="true" />
+          <NavigationProperty Name="Campaigns" Relationship="Claymore.Models.CampaignSession" FromRole="Session" ToRole="Campaign" />
+          <Property Name="InUniverseStartDate" Type="DateTime" Nullable="true" />
+          <Property Name="InUniverseEndDate" Type="DateTime" Nullable="false" />
         </EntityType>
         <Association Name="Attendance">
           <End Type="Claymore.Models.Session" Role="Session" Multiplicity="*" />
@@ -417,6 +477,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Campaign">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <NavigationProperty Name="Sessions" Relationship="Claymore.Models.CampaignSession" FromRole="Campaign" ToRole="Session" />
+          <Property Name="BaseXP" Type="Int32" Nullable="true" />
+        </EntityType>
+        <Association Name="CampaignSession">
+          <End Type="Claymore.Models.Campaign" Role="Campaign" Multiplicity="*" />
+          <End Type="Claymore.Models.Session" Role="Session" Multiplicity="*" />
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -440,6 +513,8 @@
           <ScalarProperty Name="SessionDate" ColumnName="SessionDate" />
           <ScalarProperty Name="XPTransactionId" ColumnName="XPTransactionId" />
           <ScalarProperty Name="BaseXP" ColumnName="BaseXP" />
+          <ScalarProperty Name="InUniverseStartDate" ColumnName="InUniverseStartDate" />
+          <ScalarProperty Name="InUniverseEndDate" ColumnName="InUniverseEndDate" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -498,12 +573,29 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="Campaigns">
+      <EntityTypeMapping TypeName="IsTypeOf(Claymore.Models.Campaign)">
+        <MappingFragment StoreEntitySet="Campaigns">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="BaseXP" ColumnName="BaseXP" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <AssociationSetMapping Name="Attendance" TypeName="Claymore.Models.Attendance" StoreEntitySet="Attendance">
       <EndProperty Name="Session">
         <ScalarProperty Name="Id" ColumnName="Sessions_Id" />
       </EndProperty>
       <EndProperty Name="Character">
         <ScalarProperty Name="Id" ColumnName="Characters_Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="CampaignSession" TypeName="Claymore.Models.CampaignSession" StoreEntitySet="CampaignSession">
+      <EndProperty Name="Campaign">
+        <ScalarProperty Name="Id" ColumnName="Campaigns_Id" />
+      </EndProperty>
+      <EndProperty Name="Session">
+        <ScalarProperty Name="Id" ColumnName="Sessions_Id" />
       </EndProperty>
     </AssociationSetMapping>
   </EntityContainerMapping>

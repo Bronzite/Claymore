@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 02/17/2017 09:37:12
+-- Date Created: 02/17/2017 16:29:56
 -- Generated from EDMX file: C:\Users\bronz\Documents\Visual Studio 2015\Projects\Claymore\Claymore\Models\ClaymoreDataModel.edmx
 -- --------------------------------------------------
 
@@ -101,7 +101,9 @@ CREATE TABLE [dbo].[Sessions] (
     [Name] nvarchar(max)  NOT NULL,
     [SessionDate] datetime  NOT NULL,
     [XPTransactionId] uniqueidentifier  NULL,
-    [BaseXP] nvarchar(max)  NULL
+    [BaseXP] nvarchar(max)  NULL,
+    [InUniverseStartDate] datetime  NULL,
+    [InUniverseEndDate] datetime  NOT NULL
 );
 GO
 
@@ -128,6 +130,14 @@ CREATE TABLE [dbo].[XPChanges] (
     [XPTransactionId] uniqueidentifier  NOT NULL,
     [Amount] int  NOT NULL,
     [XPAssetId] uniqueidentifier  NOT NULL
+);
+GO
+
+-- Creating table 'Campaigns'
+CREATE TABLE [dbo].[Campaigns] (
+    [Id] uniqueidentifier  NOT NULL,
+    [Name] nvarchar(max)  NOT NULL,
+    [BaseXP] int  NULL
 );
 GO
 
@@ -168,6 +178,13 @@ CREATE TABLE [dbo].[Attendance] (
 );
 GO
 
+-- Creating table 'CampaignSession'
+CREATE TABLE [dbo].[CampaignSession] (
+    [Campaigns_Id] uniqueidentifier  NOT NULL,
+    [Sessions_Id] uniqueidentifier  NOT NULL
+);
+GO
+
 -- --------------------------------------------------
 -- Creating all PRIMARY KEY constraints
 -- --------------------------------------------------
@@ -202,6 +219,12 @@ ADD CONSTRAINT [PK_XPChanges]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
+-- Creating primary key on [Id] in table 'Campaigns'
+ALTER TABLE [dbo].[Campaigns]
+ADD CONSTRAINT [PK_Campaigns]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
 -- Creating primary key on [Id] in table 'XPAssets_Attribute'
 ALTER TABLE [dbo].[XPAssets_Attribute]
 ADD CONSTRAINT [PK_XPAssets_Attribute]
@@ -230,6 +253,12 @@ GO
 ALTER TABLE [dbo].[Attendance]
 ADD CONSTRAINT [PK_Attendance]
     PRIMARY KEY CLUSTERED ([Sessions_Id], [Characters_Id] ASC);
+GO
+
+-- Creating primary key on [Campaigns_Id], [Sessions_Id] in table 'CampaignSession'
+ALTER TABLE [dbo].[CampaignSession]
+ADD CONSTRAINT [PK_CampaignSession]
+    PRIMARY KEY CLUSTERED ([Campaigns_Id], [Sessions_Id] ASC);
 GO
 
 -- --------------------------------------------------
@@ -318,6 +347,30 @@ GO
 CREATE INDEX [IX_FK_CharacterXPAsset]
 ON [dbo].[XPAssets]
     ([CharacterId]);
+GO
+
+-- Creating foreign key on [Campaigns_Id] in table 'CampaignSession'
+ALTER TABLE [dbo].[CampaignSession]
+ADD CONSTRAINT [FK_CampaignSession_Campaign]
+    FOREIGN KEY ([Campaigns_Id])
+    REFERENCES [dbo].[Campaigns]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating foreign key on [Sessions_Id] in table 'CampaignSession'
+ALTER TABLE [dbo].[CampaignSession]
+ADD CONSTRAINT [FK_CampaignSession_Session]
+    FOREIGN KEY ([Sessions_Id])
+    REFERENCES [dbo].[Sessions]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_CampaignSession_Session'
+CREATE INDEX [IX_FK_CampaignSession_Session]
+ON [dbo].[CampaignSession]
+    ([Sessions_Id]);
 GO
 
 -- Creating foreign key on [Id] in table 'XPAssets_Attribute'
