@@ -1,0 +1,93 @@
+﻿@model Claymore.Models.Character
+@using Claymore.Models;
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div>
+    <h4>@Model.Name</h4>
+    <hr />
+    <div><strong>Experience Pool:</strong><em>@Model.XPAssets.Where(x => x.Name == "XP Pool").First().AllocatedXP</em></div>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">Attributes</div>
+                <div class="panel-body">
+                    <table class="table table-striped">
+                        <tr><th>Attribute</th><th>Points</th><th>Link Modifier</th></tr>
+                        @foreach (XPAsset xp in Model.XPAssets)
+                        {
+                            Claymore.Models.Attribute a = xp as Claymore.Models.Attribute;
+                            if (a != null)
+                            {
+                                <tr>
+                                    <td>@a.Name</td>
+                                    <td>@a.AttributeLevel</td>
+                                    <td>@a.LinkBonus</td>
+                                </tr>
+                            }
+
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="panel panel-primary">
+                <div class="panel-heading">Traits</div>
+                <div class="panel-body">
+                    <table>
+                        @foreach (XPAsset xp in Model.XPAssets)
+                        {
+                            Trait t = xp as Trait;
+                            if (t != null)
+                            {
+                                <tr>
+                                    <td>
+                                        @t.Name (@Math.Abs(t.Level.Value))
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">Skills</div>
+                <div class="panel-body">
+                    <table class="table table-striped">
+                        <tr><th>Skill</th><th>XP</th><th>Link Modifier</th><th>Final Skill Bonus</th></tr>
+                        @foreach (XPAsset xp in Model.XPAssets)
+                        {
+                            Claymore.Models.Skill s = xp as Claymore.Models.Skill;
+                            if (s != null)
+                            {
+                                <tr>
+                                    <td>@s.Name</td>
+                                    <td>@Model.BaseSkillBonus(s)</td>
+                                    @if (s.SecondaryLinkAttribute == "" || s.SecondaryLinkAttribute == null)
+                                    {
+                                        <td>@s.PrimaryLinkAttribute</td>
+                                    }
+                                    else
+                                    {
+                                    <td>@s.PrimaryLinkAttribute + @s.SecondaryLinkAttribute</td>
+                                    }
+                                    <td>@Model.FinalSkillBonus(s)</td>
+                                </tr>
+                            }
+
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+</p>
