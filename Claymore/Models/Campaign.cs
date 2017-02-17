@@ -24,9 +24,11 @@ namespace Claymore.Models
         public string Name { get; set; }
         public Nullable<int> BaseXP { get; set; }
         public Nullable<System.Guid> SessionId { get; set; }
+        public Nullable<System.Guid> XPTransactionId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Session> Sessions { get; set; }
         public virtual Session ResolvedSession { get; set; }
+        public virtual XPTransaction XPTransaction { get; set; }
     }
 }

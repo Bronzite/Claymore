@@ -27,7 +27,7 @@ namespace Claymore.Models
         public Nullable<System.Guid> XPTransactionId { get; set; }
         public string BaseXP { get; set; }
         public Nullable<System.DateTime> InUniverseStartDate { get; set; }
-        public System.DateTime InUniverseEndDate { get; set; }
+        public Nullable<System.DateTime> InUniverseEndDate { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Character> Characters { get; set; }

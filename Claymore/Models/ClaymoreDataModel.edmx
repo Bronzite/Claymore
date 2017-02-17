@@ -50,6 +50,14 @@
       <End Role="Session" EntitySet="Sessions" />
       <End Role="CampaignSession" EntitySet="CampaignSession" />
     </AssociationSet>
+    <AssociationSet Name="ResolvedSession" Association="Claymore.Models.Store.CampaignSession1">
+      <End Role="Campaign" EntitySet="Campaigns" />
+      <End Role="Session" EntitySet="Sessions" />
+    </AssociationSet>
+    <AssociationSet Name="CampaignXPTransaction" Association="Claymore.Models.Store.CampaignXPTransaction">
+      <End Role="XPTransaction" EntitySet="XPTransactions" />
+      <End Role="Campaign" EntitySet="Campaigns" />
+    </AssociationSet>
     <AssociationSet Name="FK_Attribute_inherits_XPAsset" Association="Claymore.Models.Store.FK_Attribute_inherits_XPAsset">
       <End Role="XPAsset" EntitySet="XPAssets" />
       <End Role="Attribute" EntitySet="XPAssets_Attribute" />
@@ -85,7 +93,7 @@
     <Property Name="XPTransactionId" Type="uniqueidentifier" Nullable="true" />
     <Property Name="BaseXP" Type="nvarchar(max)" Nullable="true" />
     <Property Name="InUniverseStartDate" Type="datetime" Nullable="true" />
-    <Property Name="InUniverseEndDate" Type="datetime" Nullable="false" />
+    <Property Name="InUniverseEndDate" Type="datetime" Nullable="true" />
   </EntityType>
   <EntityType Name="XPAssets">
     <Key>
@@ -120,6 +128,8 @@
     <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
     <Property Name="BaseXP" Type="int" Nullable="true" />
+    <Property Name="SessionId" Type="uniqueidentifier" Nullable="true" />
+    <Property Name="XPTransactionId" Type="uniqueidentifier" Nullable="true" />
   </EntityType>
   <EntityType Name="XPAssets_Attribute">
     <Key>
@@ -212,6 +222,30 @@
       </Principal>
       <Dependent Role="XPAsset">
         <PropertyRef Name="CharacterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="CampaignSession1">
+    <End Role="Campaign" Type="Claymore.Models.Store.Campaigns" Multiplicity="*" />
+    <End Role="Session" Type="Claymore.Models.Store.Sessions" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Session">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Campaign">
+        <PropertyRef Name="SessionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="CampaignXPTransaction">
+    <End Role="XPTransaction" Type="Claymore.Models.Store.XPTransactions" Multiplicity="0..1" />
+    <End Role="Campaign" Type="Claymore.Models.Store.Campaigns" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="XPTransaction">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Campaign">
+        <PropertyRef Name="XPTransactionId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -358,6 +392,10 @@
             <End Role="Campaign" EntitySet="Campaigns" />
             <End Role="Session" EntitySet="Sessions" />
           </AssociationSet>
+          <AssociationSet Name="CampaignXPTransaction" Association="Claymore.Models.CampaignXPTransaction">
+            <End Role="XPTransaction" EntitySet="XPTransactions" />
+            <End Role="Campaign" EntitySet="Campaigns" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Character">
           <Key>
@@ -382,7 +420,7 @@
           <Property Name="BaseXP" Type="String" Nullable="true" />
           <NavigationProperty Name="Campaigns" Relationship="Claymore.Models.CampaignSession" FromRole="Session" ToRole="Campaign" />
           <Property Name="InUniverseStartDate" Type="DateTime" Nullable="true" />
-          <Property Name="InUniverseEndDate" Type="DateTime" Nullable="false" />
+          <Property Name="InUniverseEndDate" Type="DateTime" Nullable="true" />
         </EntityType>
         <Association Name="Attendance">
           <End Type="Claymore.Models.Session" Role="Session" Multiplicity="*" />
@@ -415,7 +453,7 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="Id" Type="Guid" annotation:StoreGeneratedPattern="None" Nullable="false" />
           <NavigationProperty Name="Changes" Relationship="Claymore.Models.XPChangeXPTransaction" FromRole="XPTransaction" ToRole="XPChange" />
           <NavigationProperty Name="Sessions" Relationship="Claymore.Models.XPTransactionSession" FromRole="XPTransaction" ToRole="Session" />
           <Property Name="Description" Type="String" Nullable="false" />
@@ -491,6 +529,8 @@
           <Property Name="BaseXP" Type="Int32" Nullable="true" />
           <NavigationProperty Name="ResolvedSession" Relationship="Claymore.Models.CampaignSession1" FromRole="Campaign" ToRole="Session" />
           <Property Name="SessionId" Type="Guid" Nullable="true" />
+          <NavigationProperty Name="XPTransaction" Relationship="Claymore.Models.CampaignXPTransaction" FromRole="Campaign" ToRole="XPTransaction" />
+          <Property Name="XPTransactionId" Type="Guid" Nullable="true" />
         </EntityType>
         <Association Name="CampaignSession">
           <End Type="Claymore.Models.Campaign" Role="Campaign" Multiplicity="*" />
@@ -505,6 +545,18 @@
             </Principal>
             <Dependent Role="Campaign">
               <PropertyRef Name="SessionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CampaignXPTransaction">
+          <End Type="Claymore.Models.XPTransaction" Role="XPTransaction" Multiplicity="0..1" />
+          <End Type="Claymore.Models.Campaign" Role="Campaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="XPTransaction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Campaign">
+              <PropertyRef Name="XPTransactionId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -597,6 +649,8 @@
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="BaseXP" ColumnName="BaseXP" />
+          <ScalarProperty Name="SessionId" ColumnName="SessionId" />
+          <ScalarProperty Name="XPTransactionId" ColumnName="XPTransactionId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

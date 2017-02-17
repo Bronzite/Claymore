@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 02/17/2017 16:29:56
+-- Date Created: 02/17/2017 18:29:32
 -- Generated from EDMX file: C:\Users\bronz\Documents\Visual Studio 2015\Projects\Claymore\Claymore\Models\ClaymoreDataModel.edmx
 -- --------------------------------------------------
 
@@ -34,6 +34,18 @@ IF OBJECT_ID(N'[dbo].[FK_XPTransactionSession]', 'F') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[FK_CharacterXPAsset]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[XPAssets] DROP CONSTRAINT [FK_CharacterXPAsset];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CampaignSession_Campaign]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[CampaignSession] DROP CONSTRAINT [FK_CampaignSession_Campaign];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CampaignSession_Session]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[CampaignSession] DROP CONSTRAINT [FK_CampaignSession_Session];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CampaignSession1]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Campaigns] DROP CONSTRAINT [FK_CampaignSession1];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CampaignXPTransaction]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[XPTransactions] DROP CONSTRAINT [FK_CampaignXPTransaction];
 GO
 IF OBJECT_ID(N'[dbo].[FK_Attribute_inherits_XPAsset]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[XPAssets_Attribute] DROP CONSTRAINT [FK_Attribute_inherits_XPAsset];
@@ -67,6 +79,9 @@ GO
 IF OBJECT_ID(N'[dbo].[XPChanges]', 'U') IS NOT NULL
     DROP TABLE [dbo].[XPChanges];
 GO
+IF OBJECT_ID(N'[dbo].[Campaigns]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Campaigns];
+GO
 IF OBJECT_ID(N'[dbo].[XPAssets_Attribute]', 'U') IS NOT NULL
     DROP TABLE [dbo].[XPAssets_Attribute];
 GO
@@ -81,6 +96,9 @@ IF OBJECT_ID(N'[dbo].[XPAssets_EdgePoints]', 'U') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[Attendance]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Attendance];
+GO
+IF OBJECT_ID(N'[dbo].[CampaignSession]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[CampaignSession];
 GO
 
 -- --------------------------------------------------
@@ -103,7 +121,7 @@ CREATE TABLE [dbo].[Sessions] (
     [XPTransactionId] uniqueidentifier  NULL,
     [BaseXP] nvarchar(max)  NULL,
     [InUniverseStartDate] datetime  NULL,
-    [InUniverseEndDate] datetime  NOT NULL
+    [InUniverseEndDate] datetime  NULL
 );
 GO
 
@@ -137,7 +155,9 @@ GO
 CREATE TABLE [dbo].[Campaigns] (
     [Id] uniqueidentifier  NOT NULL,
     [Name] nvarchar(max)  NOT NULL,
-    [BaseXP] int  NULL
+    [BaseXP] int  NULL,
+    [SessionId] uniqueidentifier  NULL,
+    [XPTransactionId] uniqueidentifier  NULL
 );
 GO
 
@@ -371,6 +391,36 @@ GO
 CREATE INDEX [IX_FK_CampaignSession_Session]
 ON [dbo].[CampaignSession]
     ([Sessions_Id]);
+GO
+
+-- Creating foreign key on [SessionId] in table 'Campaigns'
+ALTER TABLE [dbo].[Campaigns]
+ADD CONSTRAINT [FK_CampaignSession1]
+    FOREIGN KEY ([SessionId])
+    REFERENCES [dbo].[Sessions]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_CampaignSession1'
+CREATE INDEX [IX_FK_CampaignSession1]
+ON [dbo].[Campaigns]
+    ([SessionId]);
+GO
+
+-- Creating foreign key on [XPTransactionId] in table 'Campaigns'
+ALTER TABLE [dbo].[Campaigns]
+ADD CONSTRAINT [FK_CampaignXPTransaction]
+    FOREIGN KEY ([XPTransactionId])
+    REFERENCES [dbo].[XPTransactions]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_CampaignXPTransaction'
+CREATE INDEX [IX_FK_CampaignXPTransaction]
+ON [dbo].[Campaigns]
+    ([XPTransactionId]);
 GO
 
 -- Creating foreign key on [Id] in table 'XPAssets_Attribute'
