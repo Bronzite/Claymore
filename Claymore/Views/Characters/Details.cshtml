@@ -1,14 +1,16 @@
-﻿@model Claymore.Models.Character
+﻿@model Claymore.Models.CharacterDetailViewModel
 @using Claymore.Models;
 
 @{
     ViewBag.Title = "Details";
+    List<XPAsset> lstXPAssets = new List<XPAsset>(Model.Character.XPAssets);
+    lstXPAssets.Sort(XPAsset.Compare);
 }
 
 <div>
-    <h4>@Model.Name</h4>
+    <h4>@Model.Character.Name</h4>
     <hr />
-    <div><strong>Experience Pool:</strong><em>@Model.XPAssets.Where(x => x.Name == "XP Pool").First().AllocatedXP</em></div>
+    <div><strong>Experience Pool:</strong><em>@Model.Character.XPAssets.Where(x => x.Name == "XP Pool").First().AllocatedXP</em></div>
     <div class="row">
         <div class="col-lg-4">
             <div class="panel panel-primary">
@@ -16,7 +18,7 @@
                 <div class="panel-body">
                     <table class="table table-striped">
                         <tr><th>Attribute</th><th>Points</th><th>Link Modifier</th></tr>
-                        @foreach (XPAsset xp in Model.XPAssets)
+                        @foreach (XPAsset xp in lstXPAssets)
                         {
                             Claymore.Models.Attribute a = xp as Claymore.Models.Attribute;
                             if (a != null)
@@ -38,7 +40,7 @@
                 <div class="panel-heading">Traits</div>
                 <div class="panel-body">
                     <table>
-                        @foreach (XPAsset xp in Model.XPAssets)
+                        @foreach (XPAsset xp in lstXPAssets)
                         {
                             Trait t = xp as Trait;
                             if (t != null)
@@ -62,14 +64,14 @@
                 <div class="panel-body">
                     <table class="table table-striped">
                         <tr><th>Skill</th><th>XP</th><th>Link Modifier</th><th>Final Skill Bonus</th></tr>
-                        @foreach (XPAsset xp in Model.XPAssets)
+                        @foreach (XPAsset xp in lstXPAssets)
                         {
                             Claymore.Models.Skill s = xp as Claymore.Models.Skill;
                             if (s != null)
                             {
                                 <tr>
                                     <td>@s.Name</td>
-                                    <td>@Model.BaseSkillBonus(s)</td>
+                                    <td>@Model.Character.BaseSkillBonus(s)</td>
                                     @if (s.SecondaryLinkAttribute == "" || s.SecondaryLinkAttribute == null)
                                     {
                                         <td>@s.PrimaryLinkAttribute</td>
@@ -78,7 +80,7 @@
                                     {
                                     <td>@s.PrimaryLinkAttribute + @s.SecondaryLinkAttribute</td>
                                     }
-                                    <td>@Model.FinalSkillBonus(s)</td>
+                                    <td>@Model.Character.FinalSkillBonus(s)</td>
                                 </tr>
                             }
 
@@ -88,6 +90,14 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="panel panel-info">
+            <div class="panel-heading">XP Log</div>
+            <div class="panel">
+                @Html.Partial("~/Views/Shared/Subviews/XPTransactionSet.cshtml", Model.lstXPTransactions)
+            </div>
+        </div>
+    </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Character.Id }) |
 </p>

@@ -185,6 +185,7 @@
     <Compile Include="Models\Character.cs">
       <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\CharacterDetailViewModel.cs" />
     <Compile Include="Models\CharacterExtension.cs" />
     <Compile Include="Models\ClaymoreDataModel.Context.cs">
       <AutoGen>True</AutoGen>
@@ -311,6 +312,7 @@
     <Content Include="Views\Characters\Details.cshtml" />
     <Content Include="Views\Characters\Edit.cshtml" />
     <Content Include="Views\Characters\Index.cshtml" />
+    <Content Include="Views\Shared\Subviews\XPTransactionSet.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

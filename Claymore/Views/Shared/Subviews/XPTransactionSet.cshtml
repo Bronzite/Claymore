@@ -1,0 +1,30 @@
+﻿@using Claymore.Models
+@model IEnumerable<XPTransaction>
+
+<table class="table table-condensed ">
+    <tr><th>Transaction Date</th><th>Description</th><th>Asset</th><th>XP Change</th></tr>
+    @foreach (XPTransaction curXPTransaction in Model)
+    {
+        foreach (XPChange curXPChange in curXPTransaction.Changes)
+        {
+            <tr>
+                <td>
+                    @if (curXPTransaction.Timestamp.HasValue)
+                    {
+                        @curXPTransaction.Timestamp.Value.ToShortDateString()
+                    }
+                </td>
+                <td>
+                    @curXPTransaction.Description
+                </td>
+                <td>
+                    @curXPChange.XPAsset.Character.Name - @curXPChange.XPAsset.Name
+                </td>
+                <td>
+                    @curXPChange.Amount
+                </td>
+            </tr>
+        }
+    }
+</table>
+

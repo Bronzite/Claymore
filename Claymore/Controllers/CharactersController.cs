@@ -32,7 +32,7 @@ namespace Claymore.Controllers
             {
                 return HttpNotFound();
             }
-            return View(character);
+            return View(new CharacterDetailViewModel(character));
         }
 
         // GET: Characters/Create
