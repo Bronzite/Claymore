@@ -172,16 +172,11 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\SessionsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\Attribute.cs">
-      <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Character.cs">
-      <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\ClaymoreDataModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -197,29 +192,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ClaymoreDataModel.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Models\EdgePoints.cs">
-      <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\Session.cs">
-      <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Skill.cs">
-      <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Trait.cs">
-      <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\XPAsset.cs">
-      <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\XPChange.cs">
-      <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\XPTransaction.cs">
-      <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
-    </Compile>
+    <Compile Include="Models\SortingExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -296,6 +271,11 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Sessions\Create.cshtml" />
+    <Content Include="Views\Sessions\Delete.cshtml" />
+    <Content Include="Views\Sessions\Details.cshtml" />
+    <Content Include="Views\Sessions\Edit.cshtml" />
+    <Content Include="Views\Sessions\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

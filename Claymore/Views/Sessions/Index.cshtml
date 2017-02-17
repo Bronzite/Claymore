@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Claymore.Models.Session>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+           Play Date
+        </th>
+        <th>
+            Name
+        </th>
+        <th>
+            Attendees
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @item.SessionDate.ToString("d MMM yyyy")
+        </td>
+        <td>
+            @item.Name
+        </td>
+        <td>
+            @item.Characters.Count
+        </td>
+    </tr>
+}
+
+</table>

@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 02/16/2017 16:40:11
+-- Date Created: 02/16/2017 18:51:56
 -- Generated from EDMX file: C:\Users\bronz\Documents\Visual Studio 2015\Projects\Claymore\Claymore\Models\ClaymoreDataModel.edmx
 -- --------------------------------------------------
 
@@ -17,11 +17,71 @@ GO
 -- Dropping existing FOREIGN KEY constraints
 -- --------------------------------------------------
 
+IF OBJECT_ID(N'[dbo].[FK_Attendance_Session]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Attendance] DROP CONSTRAINT [FK_Attendance_Session];
+GO
+IF OBJECT_ID(N'[dbo].[FK_Attendance_Character]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Attendance] DROP CONSTRAINT [FK_Attendance_Character];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CharacterXPAsset]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[XPAssets] DROP CONSTRAINT [FK_CharacterXPAsset];
+GO
+IF OBJECT_ID(N'[dbo].[FK_XPChangeXPTransaction]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[XPChanges] DROP CONSTRAINT [FK_XPChangeXPTransaction];
+GO
+IF OBJECT_ID(N'[dbo].[FK_XPChangeXPAsset]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[XPChanges] DROP CONSTRAINT [FK_XPChangeXPAsset];
+GO
+IF OBJECT_ID(N'[dbo].[FK_XPTransactionSession]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Sessions] DROP CONSTRAINT [FK_XPTransactionSession];
+GO
+IF OBJECT_ID(N'[dbo].[FK_Attribute_inherits_XPAsset]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[XPAssets_Attribute] DROP CONSTRAINT [FK_Attribute_inherits_XPAsset];
+GO
+IF OBJECT_ID(N'[dbo].[FK_Skill_inherits_XPAsset]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[XPAssets_Skill] DROP CONSTRAINT [FK_Skill_inherits_XPAsset];
+GO
+IF OBJECT_ID(N'[dbo].[FK_Trait_inherits_XPAsset]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[XPAssets_Trait] DROP CONSTRAINT [FK_Trait_inherits_XPAsset];
+GO
+IF OBJECT_ID(N'[dbo].[FK_EdgePoints_inherits_XPAsset]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[XPAssets_EdgePoints] DROP CONSTRAINT [FK_EdgePoints_inherits_XPAsset];
+GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
 -- --------------------------------------------------
 
+IF OBJECT_ID(N'[dbo].[Characters]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Characters];
+GO
+IF OBJECT_ID(N'[dbo].[Sessions]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Sessions];
+GO
+IF OBJECT_ID(N'[dbo].[XPAssets]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[XPAssets];
+GO
+IF OBJECT_ID(N'[dbo].[XPTransactions]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[XPTransactions];
+GO
+IF OBJECT_ID(N'[dbo].[XPChanges]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[XPChanges];
+GO
+IF OBJECT_ID(N'[dbo].[XPAssets_Attribute]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[XPAssets_Attribute];
+GO
+IF OBJECT_ID(N'[dbo].[XPAssets_Skill]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[XPAssets_Skill];
+GO
+IF OBJECT_ID(N'[dbo].[XPAssets_Trait]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[XPAssets_Trait];
+GO
+IF OBJECT_ID(N'[dbo].[XPAssets_EdgePoints]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[XPAssets_EdgePoints];
+GO
+IF OBJECT_ID(N'[dbo].[Attendance]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Attendance];
+GO
 
 -- --------------------------------------------------
 -- Creating all tables
@@ -55,7 +115,8 @@ GO
 
 -- Creating table 'XPTransactions'
 CREATE TABLE [dbo].[XPTransactions] (
-    [Id] uniqueidentifier  NOT NULL
+    [Id] uniqueidentifier  NOT NULL,
+    [Description] nvarchar(max)  NOT NULL
 );
 GO
 

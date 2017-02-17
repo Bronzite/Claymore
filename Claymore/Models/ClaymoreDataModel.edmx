@@ -295,6 +295,10 @@
             <End Role="XPTransaction" EntitySet="XPTransactions" />
             <End Role="Session" EntitySet="Sessions" />
           </AssociationSet>
+          <AssociationSet Name="AvailableXPPool" Association="Claymore.Models.AvailableXPPool">
+            <End Role="Character" EntitySet="Characters" />
+            <End Role="XPPool" EntitySet="XPAssets" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Character">
           <Key>
@@ -305,6 +309,7 @@
           <Property Name="Birthdate" Type="DateTime" Nullable="true" />
           <NavigationProperty Name="Sessions" Relationship="Claymore.Models.Attendance" FromRole="Character" ToRole="Session" />
           <NavigationProperty Name="XPAssets" Relationship="Claymore.Models.CharacterXPAsset" FromRole="Character" ToRole="XPAsset" />
+          <NavigationProperty Name="XPPool" Relationship="Claymore.Models.AvailableXPPool" FromRole="Character" ToRole="XPPool" />
         </EntityType>
         <EntityType Name="Session">
           <Key>
@@ -327,7 +332,6 @@
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <NavigationProperty Name="Character" Relationship="Claymore.Models.CharacterXPAsset" FromRole="XPAsset" ToRole="Character" />
-          <Property Name="CharacterId" Type="Guid" Nullable="false" />
           <Property Name="AllocatedXP" Type="Int32" Nullable="true" />
           <Property Name="Name" Type="String" Nullable="false" />
           <NavigationProperty Name="XPChanges" Relationship="Claymore.Models.XPChangeXPAsset" FromRole="XPAsset" ToRole="XPChange" />
@@ -413,6 +417,11 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="XPPool" BaseType="Claymore.Models.XPAsset" />
+        <Association Name="AvailableXPPool">
+          <End Type="Claymore.Models.Character" Role="Character" Multiplicity="0..1" />
+          <End Type="Claymore.Models.XPPool" Role="XPPool" Multiplicity="1" />
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -442,7 +451,6 @@
       <EntityTypeMapping TypeName="IsTypeOf(Claymore.Models.XPAsset)">
         <MappingFragment StoreEntitySet="XPAssets">
           <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="CharacterId" ColumnName="CharacterId" />
           <ScalarProperty Name="AllocatedXP" ColumnName="AllocatedXP" />
           <ScalarProperty Name="Name" ColumnName="Name" />
         </MappingFragment>
