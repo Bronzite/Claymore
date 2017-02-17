@@ -90,6 +90,7 @@
     </Key>
     <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Timestamp" Type="datetime" Nullable="true" />
   </EntityType>
   <EntityType Name="XPChanges">
     <Key>
@@ -317,7 +318,7 @@
           <NavigationProperty Name="Characters" Relationship="Claymore.Models.Attendance" FromRole="Session" ToRole="Character" />
           <NavigationProperty Name="XPTransaction" Relationship="Claymore.Models.XPTransactionSession" FromRole="Session" ToRole="XPTransaction" />
           <Property Name="XPTransactionId" Type="Guid" Nullable="true" />
-          <Property Name="BaseXP" Type="String" Nullable="false" />
+          <Property Name="BaseXP" Type="String" Nullable="true" />
         </EntityType>
         <Association Name="Attendance">
           <End Type="Claymore.Models.Session" Role="Session" Multiplicity="*" />
@@ -354,6 +355,7 @@
           <NavigationProperty Name="Changes" Relationship="Claymore.Models.XPChangeXPTransaction" FromRole="XPTransaction" ToRole="XPChange" />
           <NavigationProperty Name="Sessions" Relationship="Claymore.Models.XPTransactionSession" FromRole="XPTransaction" ToRole="Session" />
           <Property Name="Description" Type="String" Nullable="false" />
+          <Property Name="Timestamp" Type="DateTime" Nullable="true" />
         </EntityType>
         <EntityType Name="XPChange">
           <Key>
@@ -482,6 +484,7 @@
         <MappingFragment StoreEntitySet="XPTransactions">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Timestamp" ColumnName="Timestamp" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

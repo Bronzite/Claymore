@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 02/16/2017 23:17:34
+-- Date Created: 02/17/2017 09:22:37
 -- Generated from EDMX file: C:\Users\bronz\Documents\Visual Studio 2015\Projects\Claymore\Claymore\Models\ClaymoreDataModel.edmx
 -- --------------------------------------------------
 
@@ -117,7 +117,8 @@ GO
 -- Creating table 'XPTransactions'
 CREATE TABLE [dbo].[XPTransactions] (
     [Id] uniqueidentifier  NOT NULL,
-    [Description] nvarchar(max)  NOT NULL
+    [Description] nvarchar(max)  NOT NULL,
+    [Timestamp] datetime  NULL
 );
 GO
 
