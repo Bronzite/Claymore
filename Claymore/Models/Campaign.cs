@@ -12,27 +12,21 @@ namespace Claymore.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Session
+    public partial class Campaign
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Session()
+        public Campaign()
         {
-            this.Characters = new HashSet<Character>();
-            this.Campaigns = new HashSet<Campaign>();
+            this.Sessions = new HashSet<Session>();
         }
     
         public System.Guid Id { get; set; }
         public string Name { get; set; }
-        public System.DateTime SessionDate { get; set; }
-        public Nullable<System.Guid> XPTransactionId { get; set; }
-        public string BaseXP { get; set; }
-        public Nullable<System.DateTime> InUniverseStartDate { get; set; }
-        public System.DateTime InUniverseEndDate { get; set; }
+        public Nullable<int> BaseXP { get; set; }
+        public Nullable<System.Guid> SessionId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Character> Characters { get; set; }
-        public virtual XPTransaction XPTransaction { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Campaign> Campaigns { get; set; }
+        public virtual ICollection<Session> Sessions { get; set; }
+        public virtual Session ResolvedSession { get; set; }
     }
 }

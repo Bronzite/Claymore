@@ -354,6 +354,10 @@
             <End Role="Campaign" EntitySet="Campaigns" />
             <End Role="Session" EntitySet="Sessions" />
           </AssociationSet>
+          <AssociationSet Name="ResolvedSession" Association="Claymore.Models.CampaignSession1">
+            <End Role="Campaign" EntitySet="Campaigns" />
+            <End Role="Session" EntitySet="Sessions" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Character">
           <Key>
@@ -485,10 +489,24 @@
           <Property Name="Name" Type="String" Nullable="false" />
           <NavigationProperty Name="Sessions" Relationship="Claymore.Models.CampaignSession" FromRole="Campaign" ToRole="Session" />
           <Property Name="BaseXP" Type="Int32" Nullable="true" />
+          <NavigationProperty Name="ResolvedSession" Relationship="Claymore.Models.CampaignSession1" FromRole="Campaign" ToRole="Session" />
+          <Property Name="SessionId" Type="Guid" Nullable="true" />
         </EntityType>
         <Association Name="CampaignSession">
           <End Type="Claymore.Models.Campaign" Role="Campaign" Multiplicity="*" />
           <End Type="Claymore.Models.Session" Role="Session" Multiplicity="*" />
+        </Association>
+        <Association Name="CampaignSession1">
+          <End Type="Claymore.Models.Campaign" Role="Campaign" Multiplicity="*" />
+          <End Type="Claymore.Models.Session" Role="Session" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Session">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Campaign">
+              <PropertyRef Name="SessionId" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
       </Schema>
     </edmx:ConceptualModels>

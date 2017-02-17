@@ -182,6 +182,9 @@
       <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\AttributeExtension.cs" />
+    <Compile Include="Models\Campaign.cs">
+      <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Character.cs">
       <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
     </Compile>

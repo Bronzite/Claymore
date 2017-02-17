@@ -30,5 +30,6 @@ namespace Claymore.Models
         public virtual DbSet<XPAsset> XPAssets { get; set; }
         public virtual DbSet<XPTransaction> XPTransactions { get; set; }
         public virtual DbSet<XPChange> XPChanges { get; set; }
+        public virtual DbSet<Campaign> Campaigns { get; set; }
     }
 }
