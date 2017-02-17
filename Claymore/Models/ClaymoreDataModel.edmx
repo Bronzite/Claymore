@@ -73,7 +73,7 @@
     <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
     <Property Name="SessionDate" Type="datetime" Nullable="false" />
     <Property Name="XPTransactionId" Type="uniqueidentifier" Nullable="true" />
-    <Property Name="BaseXP" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="BaseXP" Type="nvarchar(max)" Nullable="true" />
   </EntityType>
   <EntityType Name="XPAssets">
     <Key>

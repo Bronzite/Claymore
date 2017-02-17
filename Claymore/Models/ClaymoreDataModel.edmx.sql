@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 02/17/2017 09:22:37
+-- Date Created: 02/17/2017 09:37:12
 -- Generated from EDMX file: C:\Users\bronz\Documents\Visual Studio 2015\Projects\Claymore\Claymore\Models\ClaymoreDataModel.edmx
 -- --------------------------------------------------
 
@@ -101,7 +101,7 @@ CREATE TABLE [dbo].[Sessions] (
     [Name] nvarchar(max)  NOT NULL,
     [SessionDate] datetime  NOT NULL,
     [XPTransactionId] uniqueidentifier  NULL,
-    [BaseXP] nvarchar(max)  NOT NULL
+    [BaseXP] nvarchar(max)  NULL
 );
 GO
 
