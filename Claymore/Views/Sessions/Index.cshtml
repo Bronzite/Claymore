@@ -28,7 +28,7 @@
             @item.SessionDate.ToString("d MMM yyyy")
         </td>
         <td>
-            @item.Name
+            <a href="~/Sessions/Details/@item.Id.ToString()"> @item.Name</a>
         </td>
         <td>
             @item.Characters.Count

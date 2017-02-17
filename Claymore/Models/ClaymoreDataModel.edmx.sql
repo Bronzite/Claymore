@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 02/16/2017 18:51:56
+-- Date Created: 02/16/2017 23:17:34
 -- Generated from EDMX file: C:\Users\bronz\Documents\Visual Studio 2015\Projects\Claymore\Claymore\Models\ClaymoreDataModel.edmx
 -- --------------------------------------------------
 
@@ -23,9 +23,6 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_Attendance_Character]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Attendance] DROP CONSTRAINT [FK_Attendance_Character];
 GO
-IF OBJECT_ID(N'[dbo].[FK_CharacterXPAsset]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[XPAssets] DROP CONSTRAINT [FK_CharacterXPAsset];
-GO
 IF OBJECT_ID(N'[dbo].[FK_XPChangeXPTransaction]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[XPChanges] DROP CONSTRAINT [FK_XPChangeXPTransaction];
 GO
@@ -34,6 +31,9 @@ IF OBJECT_ID(N'[dbo].[FK_XPChangeXPAsset]', 'F') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[FK_XPTransactionSession]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Sessions] DROP CONSTRAINT [FK_XPTransactionSession];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CharacterXPAsset]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[XPAssets] DROP CONSTRAINT [FK_CharacterXPAsset];
 GO
 IF OBJECT_ID(N'[dbo].[FK_Attribute_inherits_XPAsset]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[XPAssets_Attribute] DROP CONSTRAINT [FK_Attribute_inherits_XPAsset];
@@ -100,16 +100,17 @@ CREATE TABLE [dbo].[Sessions] (
     [Id] uniqueidentifier  NOT NULL,
     [Name] nvarchar(max)  NOT NULL,
     [SessionDate] datetime  NOT NULL,
-    [XPTransactionId] uniqueidentifier  NULL
+    [XPTransactionId] uniqueidentifier  NULL,
+    [BaseXP] nvarchar(max)  NOT NULL
 );
 GO
 
 -- Creating table 'XPAssets'
 CREATE TABLE [dbo].[XPAssets] (
     [Id] uniqueidentifier  NOT NULL,
-    [CharacterId] uniqueidentifier  NOT NULL,
     [AllocatedXP] int  NULL,
-    [Name] nvarchar(max)  NOT NULL
+    [Name] nvarchar(max)  NOT NULL,
+    [CharacterId] uniqueidentifier  NOT NULL
 );
 GO
 
@@ -131,7 +132,7 @@ GO
 
 -- Creating table 'XPAssets_Attribute'
 CREATE TABLE [dbo].[XPAssets_Attribute] (
-    [LinkBonus] nvarchar(max)  NOT NULL,
+    [LinkBonus] int  NOT NULL,
     [Id] uniqueidentifier  NOT NULL
 );
 GO
@@ -258,21 +259,6 @@ ON [dbo].[Attendance]
     ([Characters_Id]);
 GO
 
--- Creating foreign key on [CharacterId] in table 'XPAssets'
-ALTER TABLE [dbo].[XPAssets]
-ADD CONSTRAINT [FK_CharacterXPAsset]
-    FOREIGN KEY ([CharacterId])
-    REFERENCES [dbo].[Characters]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating non-clustered index for FOREIGN KEY 'FK_CharacterXPAsset'
-CREATE INDEX [IX_FK_CharacterXPAsset]
-ON [dbo].[XPAssets]
-    ([CharacterId]);
-GO
-
 -- Creating foreign key on [XPTransactionId] in table 'XPChanges'
 ALTER TABLE [dbo].[XPChanges]
 ADD CONSTRAINT [FK_XPChangeXPTransaction]
@@ -316,6 +302,21 @@ GO
 CREATE INDEX [IX_FK_XPTransactionSession]
 ON [dbo].[Sessions]
     ([XPTransactionId]);
+GO
+
+-- Creating foreign key on [CharacterId] in table 'XPAssets'
+ALTER TABLE [dbo].[XPAssets]
+ADD CONSTRAINT [FK_CharacterXPAsset]
+    FOREIGN KEY ([CharacterId])
+    REFERENCES [dbo].[Characters]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_CharacterXPAsset'
+CREATE INDEX [IX_FK_CharacterXPAsset]
+ON [dbo].[XPAssets]
+    ([CharacterId]);
 GO
 
 -- Creating foreign key on [Id] in table 'XPAssets_Attribute'
