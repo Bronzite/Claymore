@@ -12,6 +12,7 @@
     <EntitySet Name="XPTransactions" EntityType="Claymore.Models.Store.XPTransactions" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="XPChanges" EntityType="Claymore.Models.Store.XPChanges" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Campaigns" EntityType="Claymore.Models.Store.Campaigns" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Documents" EntityType="Claymore.Models.Store.Documents" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="XPAssets_Attribute" EntityType="Claymore.Models.Store.XPAssets_Attribute" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="XPAssets_Skill" EntityType="Claymore.Models.Store.XPAssets_Skill" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="XPAssets_Trait" EntityType="Claymore.Models.Store.XPAssets_Trait" store:Type="Tables" Schema="dbo" />
@@ -57,6 +58,14 @@
     <AssociationSet Name="CampaignXPTransaction" Association="Claymore.Models.Store.CampaignXPTransaction">
       <End Role="XPTransaction" EntitySet="XPTransactions" />
       <End Role="Campaign" EntitySet="Campaigns" />
+    </AssociationSet>
+    <AssociationSet Name="DocumentCharacter" Association="Claymore.Models.Store.DocumentCharacter">
+      <End Role="Document" EntitySet="Documents" />
+      <End Role="Character" EntitySet="Characters" />
+    </AssociationSet>
+    <AssociationSet Name="DocumentSession" Association="Claymore.Models.Store.DocumentSession">
+      <End Role="Document" EntitySet="Documents" />
+      <End Role="Session" EntitySet="Sessions" />
     </AssociationSet>
     <AssociationSet Name="FK_Attribute_inherits_XPAsset" Association="Claymore.Models.Store.FK_Attribute_inherits_XPAsset">
       <End Role="XPAsset" EntitySet="XPAssets" />
@@ -130,6 +139,17 @@
     <Property Name="BaseXP" Type="int" Nullable="true" />
     <Property Name="SessionId" Type="uniqueidentifier" Nullable="true" />
     <Property Name="XPTransactionId" Type="uniqueidentifier" Nullable="true" />
+  </EntityType>
+  <EntityType Name="Documents">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="CharacterId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="PostDate" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Content" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="CreditCharacterId" Type="uniqueidentifier" Nullable="true" />
+    <Property Name="SessionId" Type="uniqueidentifier" Nullable="true" />
   </EntityType>
   <EntityType Name="XPAssets_Attribute">
     <Key>
@@ -246,6 +266,30 @@
       </Principal>
       <Dependent Role="Campaign">
         <PropertyRef Name="XPTransactionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="DocumentCharacter">
+    <End Role="Document" Type="Claymore.Models.Store.Documents" Multiplicity="*" />
+    <End Role="Character" Type="Claymore.Models.Store.Characters" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Character">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Document">
+        <PropertyRef Name="CreditCharacterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="DocumentSession">
+    <End Role="Document" Type="Claymore.Models.Store.Documents" Multiplicity="*" />
+    <End Role="Session" Type="Claymore.Models.Store.Sessions" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Session">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Document">
+        <PropertyRef Name="SessionId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -396,6 +440,15 @@
             <End Role="XPTransaction" EntitySet="XPTransactions" />
             <End Role="Campaign" EntitySet="Campaigns" />
           </AssociationSet>
+          <EntitySet Name="Documents" EntityType="Claymore.Models.Document" />
+          <AssociationSet Name="DocumentCharacter" Association="Claymore.Models.DocumentCharacter">
+            <End Role="Document" EntitySet="Documents" />
+            <End Role="Character" EntitySet="Characters" />
+          </AssociationSet>
+          <AssociationSet Name="DocumentSession" Association="Claymore.Models.DocumentSession">
+            <End Role="Document" EntitySet="Documents" />
+            <End Role="Session" EntitySet="Sessions" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Character">
           <Key>
@@ -406,6 +459,7 @@
           <Property Name="Birthdate" Type="DateTime" Nullable="true" />
           <NavigationProperty Name="Sessions" Relationship="Claymore.Models.Attendance" FromRole="Character" ToRole="Session" />
           <NavigationProperty Name="XPAssets" Relationship="Claymore.Models.CharacterXPAsset" FromRole="Character" ToRole="XPAsset" />
+          <NavigationProperty Name="Documents" Relationship="Claymore.Models.DocumentCharacter" FromRole="Character" ToRole="Document" />
         </EntityType>
         <EntityType Name="Session">
           <Key>
@@ -421,6 +475,7 @@
           <NavigationProperty Name="Campaigns" Relationship="Claymore.Models.CampaignSession" FromRole="Session" ToRole="Campaign" />
           <Property Name="InUniverseStartDate" Type="DateTime" Nullable="true" />
           <Property Name="InUniverseEndDate" Type="DateTime" Nullable="true" />
+          <NavigationProperty Name="Documents" Relationship="Claymore.Models.DocumentSession" FromRole="Session" ToRole="Document" />
         </EntityType>
         <Association Name="Attendance">
           <End Type="Claymore.Models.Session" Role="Session" Multiplicity="*" />
@@ -494,7 +549,8 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="EdgePoints" BaseType="Claymore.Models.XPAsset" />
+        <EntityType Name="EdgePoints" BaseType="Claymore.Models.XPAsset" >
+        </EntityType>
         <Association Name="XPTransactionSession">
           <End Type="Claymore.Models.XPTransaction" Role="XPTransaction" Multiplicity="0..1" />
           <End Type="Claymore.Models.Session" Role="Session" Multiplicity="*" />
@@ -557,6 +613,43 @@
             </Principal>
             <Dependent Role="Campaign">
               <PropertyRef Name="XPTransactionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Document">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="CharacterId" Type="Guid" Nullable="false" />
+          <Property Name="PostDate" Type="String" Nullable="false" />
+          <Property Name="Content" Type="String" Nullable="false" />
+          <NavigationProperty Name="Character" Relationship="Claymore.Models.DocumentCharacter" FromRole="Document" ToRole="Character" />
+          <Property Name="CreditCharacterId" Type="Guid" Nullable="true" />
+          <NavigationProperty Name="Session" Relationship="Claymore.Models.DocumentSession" FromRole="Document" ToRole="Session" />
+          <Property Name="SessionId" Type="Guid" Nullable="true" />
+        </EntityType>
+        <Association Name="DocumentCharacter">
+          <End Type="Claymore.Models.Document" Role="Document" Multiplicity="*" />
+          <End Type="Claymore.Models.Character" Role="Character" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Character">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Document">
+              <PropertyRef Name="CreditCharacterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="DocumentSession">
+          <End Type="Claymore.Models.Document" Role="Document" Multiplicity="*" />
+          <End Type="Claymore.Models.Session" Role="Session" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Session">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Document">
+              <PropertyRef Name="SessionId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -651,6 +744,18 @@
           <ScalarProperty Name="BaseXP" ColumnName="BaseXP" />
           <ScalarProperty Name="SessionId" ColumnName="SessionId" />
           <ScalarProperty Name="XPTransactionId" ColumnName="XPTransactionId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Documents">
+      <EntityTypeMapping TypeName="IsTypeOf(Claymore.Models.Document)">
+        <MappingFragment StoreEntitySet="Documents">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="CharacterId" ColumnName="CharacterId" />
+          <ScalarProperty Name="PostDate" ColumnName="PostDate" />
+          <ScalarProperty Name="Content" ColumnName="Content" />
+          <ScalarProperty Name="CreditCharacterId" ColumnName="CreditCharacterId" />
+          <ScalarProperty Name="SessionId" ColumnName="SessionId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

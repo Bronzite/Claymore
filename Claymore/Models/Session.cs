@@ -19,6 +19,7 @@ namespace Claymore.Models
         {
             this.Characters = new HashSet<Character>();
             this.Campaigns = new HashSet<Campaign>();
+            this.Documents = new HashSet<Document>();
         }
     
         public System.Guid Id { get; set; }
@@ -34,5 +35,7 @@ namespace Claymore.Models
         public virtual XPTransaction XPTransaction { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Campaign> Campaigns { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Document> Documents { get; set; }
     }
 }

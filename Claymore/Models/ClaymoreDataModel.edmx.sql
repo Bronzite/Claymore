@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 02/17/2017 18:29:32
+-- Date Created: 02/17/2017 19:42:02
 -- Generated from EDMX file: C:\Users\bronz\Documents\Visual Studio 2015\Projects\Claymore\Claymore\Models\ClaymoreDataModel.edmx
 -- --------------------------------------------------
 
@@ -45,7 +45,10 @@ IF OBJECT_ID(N'[dbo].[FK_CampaignSession1]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Campaigns] DROP CONSTRAINT [FK_CampaignSession1];
 GO
 IF OBJECT_ID(N'[dbo].[FK_CampaignXPTransaction]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[XPTransactions] DROP CONSTRAINT [FK_CampaignXPTransaction];
+    ALTER TABLE [dbo].[Campaigns] DROP CONSTRAINT [FK_CampaignXPTransaction];
+GO
+IF OBJECT_ID(N'[dbo].[FK_DocumentCharacter]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Documents] DROP CONSTRAINT [FK_DocumentCharacter];
 GO
 IF OBJECT_ID(N'[dbo].[FK_Attribute_inherits_XPAsset]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[XPAssets_Attribute] DROP CONSTRAINT [FK_Attribute_inherits_XPAsset];
@@ -81,6 +84,9 @@ IF OBJECT_ID(N'[dbo].[XPChanges]', 'U') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[Campaigns]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Campaigns];
+GO
+IF OBJECT_ID(N'[dbo].[Documents]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Documents];
 GO
 IF OBJECT_ID(N'[dbo].[XPAssets_Attribute]', 'U') IS NOT NULL
     DROP TABLE [dbo].[XPAssets_Attribute];
@@ -158,6 +164,17 @@ CREATE TABLE [dbo].[Campaigns] (
     [BaseXP] int  NULL,
     [SessionId] uniqueidentifier  NULL,
     [XPTransactionId] uniqueidentifier  NULL
+);
+GO
+
+-- Creating table 'Documents'
+CREATE TABLE [dbo].[Documents] (
+    [Id] uniqueidentifier  NOT NULL,
+    [CharacterId] uniqueidentifier  NOT NULL,
+    [PostDate] nvarchar(max)  NOT NULL,
+    [Content] nvarchar(max)  NOT NULL,
+    [CreditCharacterId] uniqueidentifier  NULL,
+    [SessionId] uniqueidentifier  NULL
 );
 GO
 
@@ -242,6 +259,12 @@ GO
 -- Creating primary key on [Id] in table 'Campaigns'
 ALTER TABLE [dbo].[Campaigns]
 ADD CONSTRAINT [PK_Campaigns]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'Documents'
+ALTER TABLE [dbo].[Documents]
+ADD CONSTRAINT [PK_Documents]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
@@ -421,6 +444,36 @@ GO
 CREATE INDEX [IX_FK_CampaignXPTransaction]
 ON [dbo].[Campaigns]
     ([XPTransactionId]);
+GO
+
+-- Creating foreign key on [CreditCharacterId] in table 'Documents'
+ALTER TABLE [dbo].[Documents]
+ADD CONSTRAINT [FK_DocumentCharacter]
+    FOREIGN KEY ([CreditCharacterId])
+    REFERENCES [dbo].[Characters]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_DocumentCharacter'
+CREATE INDEX [IX_FK_DocumentCharacter]
+ON [dbo].[Documents]
+    ([CreditCharacterId]);
+GO
+
+-- Creating foreign key on [SessionId] in table 'Documents'
+ALTER TABLE [dbo].[Documents]
+ADD CONSTRAINT [FK_DocumentSession]
+    FOREIGN KEY ([SessionId])
+    REFERENCES [dbo].[Sessions]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_DocumentSession'
+CREATE INDEX [IX_FK_DocumentSession]
+ON [dbo].[Documents]
+    ([SessionId]);
 GO
 
 -- Creating foreign key on [Id] in table 'XPAssets_Attribute'
