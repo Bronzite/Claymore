@@ -5,26 +5,41 @@
     <tr><th>Transaction Date</th><th>Description</th><th>Asset</th><th>XP Change</th></tr>
     @foreach (XPTransaction curXPTransaction in Model)
     {
-        foreach (XPChange curXPChange in curXPTransaction.Changes)
-        {
-            <tr>
-                <td>
-                    @if (curXPTransaction.Timestamp.HasValue)
-                    {
-                        @curXPTransaction.Timestamp.Value.ToShortDateString()
-                    }
-                </td>
-                <td>
-                    @curXPTransaction.Description
-                </td>
-                <td>
-                    @curXPChange.XPAsset.Character.Name - @curXPChange.XPAsset.Name
-                </td>
-                <td>
-                    @curXPChange.Amount
+    <tr>
+        <td>
+            @if (curXPTransaction.Timestamp.HasValue)
+            {
+                @curXPTransaction.Timestamp.Value.ToShortDateString()
+            }
+        </td>
+        <td colspan="2">
+            @curXPTransaction.Description
+        </td>
+        <td>
+            
+        </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td colspan="3">
+                <table class="table table-striped">
+                    <tbody>
+                        @foreach (XPChange curXPChange in curXPTransaction.Changes)
+                        {
+                            <tr>
+                                <td>
+                                    @curXPChange.XPAsset.Character.Name - @curXPChange.XPAsset.Name
+                                </td>
+                                <td>
+                                    @curXPChange.Amount
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
                 </td>
             </tr>
-        }
-    }
+
+                    }
 </table>
 
