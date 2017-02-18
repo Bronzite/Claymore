@@ -35,7 +35,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-8">
+        <div class="col-lg-6">
             <div class="panel panel-primary">
                 <div class="panel-heading">Traits</div>
                 <div class="panel-body">
@@ -50,6 +50,42 @@
                                         @t.Name (@Math.Abs(t.Level.Value))
                                     </td>
                                 </tr>
+                            }
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="panel panel-primary">
+                <div class="panel-heading">Edge Points</div>
+                <div class="panel-body">
+                    <table>
+                        @foreach (XPAsset xp in lstXPAssets)
+                        {
+                            EdgePoints ep = xp as EdgePoints;
+
+
+                            if (ep != null)
+                            {
+                                Claymore.Models.Attribute attr = Model.Character.XPAssets.Where(x => x.Name == "EDG").First() as Claymore.Models.Attribute;
+                                int iEdgePoints = attr.AttributeLevel;
+                                for (int i = 0; i < iEdgePoints; i++)
+                                {
+                                <tr>
+                                    <td>
+                                        @if (ep.AvailablePoints > i)
+                                        {
+                                            <div class="glyphicon glyphicon-star" />
+                                        }
+                                        else
+                                        {
+                                            <div class="glyphicon glyphicon-star-empty" />
+                                        }
+                                    </td>
+                                </tr>
+                                }
+                                <tr><td>@ep.AvailablePoints/@iEdgePoints</td></tr>
                             }
                         }
                     </table>
