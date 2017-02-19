@@ -15,7 +15,6 @@ namespace Claymore.Models
     public partial class Document
     {
         public System.Guid Id { get; set; }
-        public System.Guid CharacterId { get; set; }
         public string PostDate { get; set; }
         public string Content { get; set; }
         public Nullable<System.Guid> CreditCharacterId { get; set; }

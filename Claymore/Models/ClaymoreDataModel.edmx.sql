@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 02/17/2017 19:42:02
+-- Date Created: 02/18/2017 20:16:42
 -- Generated from EDMX file: C:\Users\bronz\Documents\Visual Studio 2015\Projects\Claymore\Claymore\Models\ClaymoreDataModel.edmx
 -- --------------------------------------------------
 
@@ -49,6 +49,9 @@ IF OBJECT_ID(N'[dbo].[FK_CampaignXPTransaction]', 'F') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[FK_DocumentCharacter]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Documents] DROP CONSTRAINT [FK_DocumentCharacter];
+GO
+IF OBJECT_ID(N'[dbo].[FK_DocumentSession]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Documents] DROP CONSTRAINT [FK_DocumentSession];
 GO
 IF OBJECT_ID(N'[dbo].[FK_Attribute_inherits_XPAsset]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[XPAssets_Attribute] DROP CONSTRAINT [FK_Attribute_inherits_XPAsset];
@@ -170,7 +173,6 @@ GO
 -- Creating table 'Documents'
 CREATE TABLE [dbo].[Documents] (
     [Id] uniqueidentifier  NOT NULL,
-    [CharacterId] uniqueidentifier  NOT NULL,
     [PostDate] nvarchar(max)  NOT NULL,
     [Content] nvarchar(max)  NOT NULL,
     [CreditCharacterId] uniqueidentifier  NULL,

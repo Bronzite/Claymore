@@ -145,7 +145,6 @@
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="CharacterId" Type="uniqueidentifier" Nullable="false" />
     <Property Name="PostDate" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Content" Type="nvarchar(max)" Nullable="false" />
     <Property Name="CreditCharacterId" Type="uniqueidentifier" Nullable="true" />
@@ -621,7 +620,6 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
-          <Property Name="CharacterId" Type="Guid" Nullable="false" />
           <Property Name="PostDate" Type="String" Nullable="false" />
           <Property Name="Content" Type="String" Nullable="false" />
           <NavigationProperty Name="Character" Relationship="Claymore.Models.DocumentCharacter" FromRole="Document" ToRole="Character" />
@@ -751,7 +749,6 @@
       <EntityTypeMapping TypeName="IsTypeOf(Claymore.Models.Document)">
         <MappingFragment StoreEntitySet="Documents">
           <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="CharacterId" ColumnName="CharacterId" />
           <ScalarProperty Name="PostDate" ColumnName="PostDate" />
           <ScalarProperty Name="Content" ColumnName="Content" />
           <ScalarProperty Name="CreditCharacterId" ColumnName="CreditCharacterId" />
