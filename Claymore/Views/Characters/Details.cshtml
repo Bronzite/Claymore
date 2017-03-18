@@ -102,19 +102,27 @@
                 </tr>
             }
             <tr><td>@ep.AvailablePoints/@iEdgePoints</td></tr>
-                                if (Model.ChangesPermitted)
-                                {
-                                    if(ep.AvailablePoints < attr.AttributeLevel)
-                                    { 
+            if (Model.ChangesPermitted)
+            {
+                if (ep.AvailablePoints < attr.AttributeLevel)
+                {
                         <tr>
                             <td>
                                 <a href="~/Characters/UpgradeXPAsset/@Model.Character.Id.ToString()/@ep.Id.ToString()"><div class="btn btn-sm btn-success">Buy Edge Point (@ep.XPToUpgrade XP)</div></a>
                             </td>
                         </tr>
-                                     }
-                                }
-                            }
-                        }
+                }
+                if(ep.AvailablePoints>0)
+                { 
+                        <tr>
+                            <td>
+                                <a href="~/Characters/SpendEdgePoint/@Model.Character.Id.ToString()"><div class="btn btn-sm btn-danger">Spend Edge Point</div></a>
+                            </td>
+                        </tr>
+                }
+            }
+        }
+    }
                                 </table>
 
                 </div>

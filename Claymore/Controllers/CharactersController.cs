@@ -127,6 +127,47 @@ namespace Claymore.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult SpendEdgePoint(Guid id)
+        {
+            Character c = db.Characters.Find(id);
+
+            if(c!=null)
+            {
+                //TODO: Ensure user is allowed to make this change
+                EdgePoints ep = c.XPAssets.Where(x => x.Name == "Edge Points").First() as EdgePoints;
+
+                if(ep != null)
+                {
+                    if (ep.AllocatedXP.Value >= 20)
+                    {
+                        XPTransaction newTransaction = new XPTransaction();
+                        newTransaction.Id = Guid.NewGuid();
+                        newTransaction.Description = "Edge Point Spent";
+                        newTransaction.Timestamp = DateTime.Now;
+                        XPChange chgDeductFromPool = new XPChange();
+                        chgDeductFromPool.Id = Guid.NewGuid();
+                        chgDeductFromPool.Transaction = newTransaction;
+                        chgDeductFromPool.XPAsset = ep;
+                        chgDeductFromPool.Amount = -20;
+                        newTransaction.Changes.Add(chgDeductFromPool);
+                        db.XPTransactions.Add(newTransaction);
+                        db.XPChanges.Add(chgDeductFromPool);
+                        db.SaveChanges();
+                        XPAsset.RefreshAllXPAssets();
+                    }
+                }
+                
+            }
+            if (Request != null)
+            {
+                return new RedirectResult(Request.UrlReferrer.AbsoluteUri);
+            }
+            else
+            {
+                return RedirectToAction("Details", id);
+            }
+        }
+
         [Route("Characters/UpgradeXPAsset/{idCharacter}/{idSkill}")]
         public ActionResult UpgradeXPAsset(Guid idCharacter, Guid idSkill)
         {
