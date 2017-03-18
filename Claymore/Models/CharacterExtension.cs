@@ -16,8 +16,13 @@ namespace Claymore.Models
                 {
                     dModifier = 0.8D;
                 }
-                
-                while(iStandard[retval] * dModifier < s.AllocatedXP )
+
+                if (XPAssets.Where(x => x.Name == "Slow Learner").Count() > 0)
+                {
+                    dModifier = 1.2D;
+                }
+
+            while (iStandard[retval] * dModifier < s.AllocatedXP )
                 {
                     retval++;
                 }

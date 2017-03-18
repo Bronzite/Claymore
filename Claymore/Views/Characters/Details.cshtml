@@ -5,6 +5,7 @@
     ViewBag.Title = "Details";
     List<XPAsset> lstXPAssets = new List<XPAsset>(Model.Character.XPAssets);
     lstXPAssets.Sort(XPAsset.Compare);
+    
 }
 
 <div>
@@ -17,7 +18,7 @@
                 <div class="panel-heading">Attributes</div>
                 <div class="panel-body">
                     <table class="table table-striped">
-                        <tr><th>Attribute</th><th>Points</th><th>Link Modifier</th></tr>
+                        <tr><th>Attribute</th><th>Points</th><th>Link Modifier</th><th></th></tr>
                         @foreach (XPAsset xp in lstXPAssets)
                         {
                             Claymore.Models.Attribute a = xp as Claymore.Models.Attribute;
@@ -27,6 +28,12 @@
                                     <td>@a.Name</td>
                                     <td>@a.AttributeLevel</td>
                                     <td>@a.LinkBonus</td>
+                                    <td>
+                                        @if (Model.ChangesPermitted)
+                                        {
+                                        <a href="~/Characters/UpgradeXPAsset/@Model.Character.Id.ToString()/@a.Id.ToString()"><div class="btn btn-sm btn-success">Upgrade (@a.XPToUpgrade XP)</div></a>
+                                        }
+                                    </td>
                                 </tr>
                             }
 
@@ -49,6 +56,15 @@
                                     <td>
                                         @t.Name (@Math.Abs(t.Level.Value))
                                     </td>
+                                    <td>
+@if (Model.ChangesPermitted)
+{
+    if (t.AllocatedXP.Value > 0)
+    {
+                                        <a href="~/Characters/UpgradeXPAsset/@Model.Character.Id.ToString()/@t.Id.ToString()"><div class="btn btn-sm btn-success">Upgrade (@t.XPToUpgrade XP)</div></a>
+    }
+}
+                                    </td>
                                 </tr>
                             }
                         }
@@ -61,34 +77,46 @@
                 <div class="panel-heading">Edge Points</div>
                 <div class="panel-body">
                     <table>
-                        @foreach (XPAsset xp in lstXPAssets)
+    @foreach (XPAsset xp in lstXPAssets)
+    {
+        EdgePoints ep = xp as EdgePoints;
+
+
+        if (ep != null)
+        {
+            Claymore.Models.Attribute attr = Model.Character.XPAssets.Where(x => x.Name == "EDG").First() as Claymore.Models.Attribute;
+            int iEdgePoints = attr.AttributeLevel;
+            for (int i = 0; i < iEdgePoints; i++)
+            {
+                <tr>
+                    <td>
+                        @if (ep.AvailablePoints > i)
                         {
-                            EdgePoints ep = xp as EdgePoints;
-
-
-                            if (ep != null)
-                            {
-                                Claymore.Models.Attribute attr = Model.Character.XPAssets.Where(x => x.Name == "EDG").First() as Claymore.Models.Attribute;
-                                int iEdgePoints = attr.AttributeLevel;
-                                for (int i = 0; i < iEdgePoints; i++)
+                            <div class="glyphicon glyphicon-star" />
+                        }
+                        else
+                        {
+                            <div class="glyphicon glyphicon-star-empty" />
+                        }
+                    </td>
+                </tr>
+            }
+            <tr><td>@ep.AvailablePoints/@iEdgePoints</td></tr>
+                                if (Model.ChangesPermitted)
                                 {
-                                <tr>
-                                    <td>
-                                        @if (ep.AvailablePoints > i)
-                                        {
-                                            <div class="glyphicon glyphicon-star" />
-                                        }
-                                        else
-                                        {
-                                            <div class="glyphicon glyphicon-star-empty" />
-                                        }
-                                    </td>
-                                </tr>
+                                    if(ep.AvailablePoints < attr.AttributeLevel)
+                                    { 
+                        <tr>
+                            <td>
+                                <a href="~/Characters/UpgradeXPAsset/@Model.Character.Id.ToString()/@ep.Id.ToString()"><div class="btn btn-sm btn-success">Buy Edge Point (@ep.XPToUpgrade XP)</div></a>
+                            </td>
+                        </tr>
+                                     }
                                 }
-                                <tr><td>@ep.AvailablePoints/@iEdgePoints</td></tr>
                             }
                         }
-                    </table>
+                                </table>
+
                 </div>
             </div>
         </div>
@@ -99,7 +127,7 @@
                 <div class="panel-heading">Skills</div>
                 <div class="panel-body">
                     <table class="table table-striped">
-                        <tr><th>Skill</th><th>XP</th><th>Link Modifier</th><th>Final Skill Bonus</th></tr>
+                        <tr><th>Skill</th><th>XP</th><th>Link Modifier</th><th>Final Skill Bonus</th><th></th></tr>
                         @foreach (XPAsset xp in lstXPAssets)
                         {
                             Claymore.Models.Skill s = xp as Claymore.Models.Skill;
@@ -117,6 +145,12 @@
                                     <td>@s.PrimaryLinkAttribute + @s.SecondaryLinkAttribute</td>
                                     }
                                     <td>@Model.Character.FinalSkillBonus(s)</td>
+                                    <td>
+                                        @if (Model.ChangesPermitted)
+                                        {
+                                            <a href="~/Characters/UpgradeXPAsset/@Model.Character.Id.ToString()/@s.Id.ToString()"><div class="btn btn-sm btn-success">Upgrade (@s.XPToUpgrade XP)</div></a>
+                                        }
+                                    </td>
                                 </tr>
                             }
 

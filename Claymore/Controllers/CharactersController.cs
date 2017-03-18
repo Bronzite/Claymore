@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Claymore.Models;
+using Microsoft.AspNet.Identity;
 
 namespace Claymore.Controllers
 {
@@ -32,7 +33,17 @@ namespace Claymore.Controllers
             {
                 return HttpNotFound();
             }
-            return View(new CharacterDetailViewModel(character));
+
+            CharacterDetailViewModel retval = new CharacterDetailViewModel(character);
+            foreach(CharacterOwnership co in character.CharacterOwnerships)
+            {
+                if (co.UserId.ToString() == User.Identity.GetUserId())
+                {
+                    retval.ChangesPermitted = true;
+                }
+            }
+
+            return View(retval);
         }
 
         // GET: Characters/Create
@@ -114,6 +125,51 @@ namespace Claymore.Controllers
             db.Characters.Remove(character);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        [Route("Characters/UpgradeXPAsset/{idCharacter}/{idSkill}")]
+        public ActionResult UpgradeXPAsset(Guid idCharacter, Guid idSkill)
+        {
+            Character c = db.Characters.Find(idCharacter);
+            XPAsset asset = db.XPAssets.Find(idSkill);
+
+            if (c != null && asset !=null)
+            {
+                XPAsset XPPool = c.XPAssets.Where(x => x.Name == "XP Pool").First();
+                int iPoints = XPPool.AllocatedXP.Value;
+                if (asset.XPToUpgrade <= iPoints)
+                {
+                    XPTransaction newTransaction = new XPTransaction();
+                    newTransaction.Id = Guid.NewGuid();
+                    newTransaction.Description = "XP Spend";
+                    newTransaction.Timestamp = DateTime.Now;
+                    XPChange chgAddToAsset = new XPChange();
+                    chgAddToAsset.Id = Guid.NewGuid();
+                    chgAddToAsset.Transaction = newTransaction;
+                    chgAddToAsset.XPAsset = asset;
+                    chgAddToAsset.Amount = asset.XPToUpgrade;
+                    XPChange chgDeductFromPool = new XPChange();
+                    chgDeductFromPool.Id = Guid.NewGuid();
+                    chgDeductFromPool.Transaction = newTransaction;
+                    chgDeductFromPool.XPAsset = XPPool;
+                    chgDeductFromPool.Amount = -asset.XPToUpgrade;
+                    newTransaction.Changes.Add(chgAddToAsset);
+                    newTransaction.Changes.Add(chgDeductFromPool);
+                    db.XPTransactions.Add(newTransaction);
+                    db.XPChanges.Add(chgAddToAsset);
+                    db.XPChanges.Add(chgDeductFromPool);
+                    db.SaveChanges();
+                    XPAsset.RefreshAllXPAssets();
+                }
+            }
+            if (Request != null)
+            {
+                return new RedirectResult(Request.UrlReferrer.AbsoluteUri);
+            }
+            else
+            {
+                return RedirectToAction("Details", idCharacter);
+            }
         }
 
         protected override void Dispose(bool disposing)

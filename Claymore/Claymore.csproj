@@ -231,6 +231,7 @@
     <Compile Include="Models\XPAsset.cs">
       <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\XPAssetUpgradeExtensions.cs" />
     <Compile Include="Models\XPChange.cs">
       <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
     </Compile>
@@ -267,6 +268,7 @@
     <Content Include="Models\ClaymoreDataModel.edmx.diagram">
       <DependentUpon>ClaymoreDataModel.edmx</DependentUpon>
     </Content>
+    <None Include="Properties\PublishProfiles\CGLDEV.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />

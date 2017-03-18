@@ -33,5 +33,7 @@ namespace Claymore.Models
         }
         public Character Character { get; set; }
         public List<XPTransaction> lstXPTransactions { get; set; }
+
+        public bool ChangesPermitted { get; set; }
     }
 }
