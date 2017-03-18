@@ -20,6 +20,7 @@ namespace Claymore.Models
             this.Sessions = new HashSet<Session>();
             this.XPAssets = new HashSet<XPAsset>();
             this.Documents = new HashSet<Document>();
+            this.CharacterOwnerships = new HashSet<CharacterOwnership>();
         }
     
         public System.Guid Id { get; set; }
@@ -32,5 +33,7 @@ namespace Claymore.Models
         public virtual ICollection<XPAsset> XPAssets { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Document> Documents { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CharacterOwnership> CharacterOwnerships { get; set; }
     }
 }

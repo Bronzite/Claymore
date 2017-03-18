@@ -13,6 +13,7 @@
     <EntitySet Name="XPChanges" EntityType="Claymore.Models.Store.XPChanges" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Campaigns" EntityType="Claymore.Models.Store.Campaigns" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Documents" EntityType="Claymore.Models.Store.Documents" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="CharacterOwnerships" EntityType="Claymore.Models.Store.CharacterOwnerships" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="XPAssets_Attribute" EntityType="Claymore.Models.Store.XPAssets_Attribute" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="XPAssets_Skill" EntityType="Claymore.Models.Store.XPAssets_Skill" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="XPAssets_Trait" EntityType="Claymore.Models.Store.XPAssets_Trait" store:Type="Tables" Schema="dbo" />
@@ -66,6 +67,10 @@
     <AssociationSet Name="DocumentSession" Association="Claymore.Models.Store.DocumentSession">
       <End Role="Document" EntitySet="Documents" />
       <End Role="Session" EntitySet="Sessions" />
+    </AssociationSet>
+    <AssociationSet Name="CharacterOwnershipCharacter" Association="Claymore.Models.Store.CharacterOwnershipCharacter">
+      <End Role="CharacterOwnership" EntitySet="CharacterOwnerships" />
+      <End Role="Character" EntitySet="Characters" />
     </AssociationSet>
     <AssociationSet Name="FK_Attribute_inherits_XPAsset" Association="Claymore.Models.Store.FK_Attribute_inherits_XPAsset">
       <End Role="XPAsset" EntitySet="XPAssets" />
@@ -149,6 +154,14 @@
     <Property Name="Content" Type="nvarchar(max)" Nullable="false" />
     <Property Name="CreditCharacterId" Type="uniqueidentifier" Nullable="true" />
     <Property Name="SessionId" Type="uniqueidentifier" Nullable="true" />
+  </EntityType>
+  <EntityType Name="CharacterOwnerships">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="CharacterId" Type="uniqueidentifier" Nullable="false" />
   </EntityType>
   <EntityType Name="XPAssets_Attribute">
     <Key>
@@ -289,6 +302,18 @@
       </Principal>
       <Dependent Role="Document">
         <PropertyRef Name="SessionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="CharacterOwnershipCharacter">
+    <End Role="CharacterOwnership" Type="Claymore.Models.Store.CharacterOwnerships" Multiplicity="*" />
+    <End Role="Character" Type="Claymore.Models.Store.Characters" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Character">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CharacterOwnership">
+        <PropertyRef Name="CharacterId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -448,6 +473,11 @@
             <End Role="Document" EntitySet="Documents" />
             <End Role="Session" EntitySet="Sessions" />
           </AssociationSet>
+          <EntitySet Name="CharacterOwnerships" EntityType="Claymore.Models.CharacterOwnership" />
+          <AssociationSet Name="CharacterOwnershipCharacter" Association="Claymore.Models.CharacterOwnershipCharacter">
+            <End Role="CharacterOwnership" EntitySet="CharacterOwnerships" />
+            <End Role="Character" EntitySet="Characters" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Character">
           <Key>
@@ -459,6 +489,7 @@
           <NavigationProperty Name="Sessions" Relationship="Claymore.Models.Attendance" FromRole="Character" ToRole="Session" />
           <NavigationProperty Name="XPAssets" Relationship="Claymore.Models.CharacterXPAsset" FromRole="Character" ToRole="XPAsset" />
           <NavigationProperty Name="Documents" Relationship="Claymore.Models.DocumentCharacter" FromRole="Character" ToRole="Document" />
+          <NavigationProperty Name="CharacterOwnerships" Relationship="Claymore.Models.CharacterOwnershipCharacter" FromRole="Character" ToRole="CharacterOwnership" />
         </EntityType>
         <EntityType Name="Session">
           <Key>
@@ -651,6 +682,27 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="CharacterOwnership">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="UserId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Character" Relationship="Claymore.Models.CharacterOwnershipCharacter" FromRole="CharacterOwnership" ToRole="Character" />
+          <Property Name="CharacterId" Type="Guid" Nullable="false" />
+        </EntityType>
+        <Association Name="CharacterOwnershipCharacter">
+          <End Type="Claymore.Models.CharacterOwnership" Role="CharacterOwnership" Multiplicity="*" />
+          <End Type="Claymore.Models.Character" Role="Character" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="Character">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CharacterOwnership">
+              <PropertyRef Name="CharacterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -753,6 +805,15 @@
           <ScalarProperty Name="Content" ColumnName="Content" />
           <ScalarProperty Name="CreditCharacterId" ColumnName="CreditCharacterId" />
           <ScalarProperty Name="SessionId" ColumnName="SessionId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CharacterOwnerships">
+      <EntityTypeMapping TypeName="IsTypeOf(Claymore.Models.CharacterOwnership)">
+        <MappingFragment StoreEntitySet="CharacterOwnerships">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="CharacterId" ColumnName="CharacterId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

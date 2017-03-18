@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 02/18/2017 20:16:42
+-- Date Created: 03/17/2017 20:21:22
 -- Generated from EDMX file: C:\Users\bronz\Documents\Visual Studio 2015\Projects\Claymore\Claymore\Models\ClaymoreDataModel.edmx
 -- --------------------------------------------------
 
@@ -180,6 +180,14 @@ CREATE TABLE [dbo].[Documents] (
 );
 GO
 
+-- Creating table 'CharacterOwnerships'
+CREATE TABLE [dbo].[CharacterOwnerships] (
+    [Id] uniqueidentifier  NOT NULL,
+    [UserId] uniqueidentifier  NOT NULL,
+    [CharacterId] uniqueidentifier  NOT NULL
+);
+GO
+
 -- Creating table 'XPAssets_Attribute'
 CREATE TABLE [dbo].[XPAssets_Attribute] (
     [LinkBonus] int  NOT NULL,
@@ -267,6 +275,12 @@ GO
 -- Creating primary key on [Id] in table 'Documents'
 ALTER TABLE [dbo].[Documents]
 ADD CONSTRAINT [PK_Documents]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'CharacterOwnerships'
+ALTER TABLE [dbo].[CharacterOwnerships]
+ADD CONSTRAINT [PK_CharacterOwnerships]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
@@ -476,6 +490,21 @@ GO
 CREATE INDEX [IX_FK_DocumentSession]
 ON [dbo].[Documents]
     ([SessionId]);
+GO
+
+-- Creating foreign key on [CharacterId] in table 'CharacterOwnerships'
+ALTER TABLE [dbo].[CharacterOwnerships]
+ADD CONSTRAINT [FK_CharacterOwnershipCharacter]
+    FOREIGN KEY ([CharacterId])
+    REFERENCES [dbo].[Characters]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_CharacterOwnershipCharacter'
+CREATE INDEX [IX_FK_CharacterOwnershipCharacter]
+ON [dbo].[CharacterOwnerships]
+    ([CharacterId]);
 GO
 
 -- Creating foreign key on [Id] in table 'XPAssets_Attribute'

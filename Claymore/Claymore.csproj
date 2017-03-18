@@ -191,6 +191,9 @@
     </Compile>
     <Compile Include="Models\CharacterDetailViewModel.cs" />
     <Compile Include="Models\CharacterExtension.cs" />
+    <Compile Include="Models\CharacterOwnership.cs">
+      <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ClaymoreDataModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
