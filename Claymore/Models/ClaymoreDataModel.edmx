@@ -853,6 +853,35 @@
     </edmx:Options>
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
+      <Diagram DiagramId="ad98ae96b486423bb54ffbc4a72cecee" Name="Diagram1">
+        <EntityTypeShape EntityType="Claymore.Models.Character" Width="1.5" PointX="9.75" PointY="2.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Claymore.Models.Session" Width="1.5" PointX="7.5" PointY="1.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Claymore.Models.XPAsset" Width="1.5" PointX="5.25" PointY="8" IsExpanded="true" />
+        <EntityTypeShape EntityType="Claymore.Models.Attribute" Width="1.5" PointX="4.125" PointY="10.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Claymore.Models.Skill" Width="1.5" PointX="6.375" PointY="10.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Claymore.Models.Trait" Width="1.5" PointX="8.625" PointY="10.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Claymore.Models.XPTransaction" Width="1.5" PointX="3" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="Claymore.Models.XPChange" Width="1.5" PointX="0.75" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="Claymore.Models.EdgePoints" Width="1.5" PointX="1.875" PointY="10.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Claymore.Models.Campaign" Width="1.5" PointX="5.25" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Claymore.Models.Document" Width="1.5" PointX="5.25" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Claymore.Models.CharacterOwnership" Width="1.5" PointX="7.5" PointY="5.125" IsExpanded="true" />
+        <InheritanceConnector EntityType="Claymore.Models.Attribute" ManuallyRouted="false" />
+        <InheritanceConnector EntityType="Claymore.Models.Skill" ManuallyRouted="false" />
+        <InheritanceConnector EntityType="Claymore.Models.Trait" ManuallyRouted="false" />
+        <InheritanceConnector EntityType="Claymore.Models.EdgePoints" ManuallyRouted="false" />
+        <AssociationConnector Association="Claymore.Models.Attendance" ManuallyRouted="false" />
+        <AssociationConnector Association="Claymore.Models.XPChangeXPTransaction" ManuallyRouted="false" />
+        <AssociationConnector Association="Claymore.Models.XPChangeXPAsset" ManuallyRouted="false" />
+        <AssociationConnector Association="Claymore.Models.XPTransactionSession" ManuallyRouted="false" />
+        <AssociationConnector Association="Claymore.Models.CharacterXPAsset" ManuallyRouted="false" />
+        <AssociationConnector Association="Claymore.Models.CampaignSession" ManuallyRouted="false" />
+        <AssociationConnector Association="Claymore.Models.CampaignSession1" ManuallyRouted="false" />
+        <AssociationConnector Association="Claymore.Models.CampaignXPTransaction" ManuallyRouted="false" />
+        <AssociationConnector Association="Claymore.Models.DocumentCharacter" ManuallyRouted="false" />
+        <AssociationConnector Association="Claymore.Models.DocumentSession" ManuallyRouted="false" />
+        <AssociationConnector Association="Claymore.Models.CharacterOwnershipCharacter" ManuallyRouted="false" />
+      </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

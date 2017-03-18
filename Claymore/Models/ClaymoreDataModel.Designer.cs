@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Users\bronz\Documents\Visual Studio 2015\Projects\Claymore\Claymore\Models\ClaymoreDataModel.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Users\bronz_000\Source\Repos\Claymore\Claymore\Models\ClaymoreDataModel.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

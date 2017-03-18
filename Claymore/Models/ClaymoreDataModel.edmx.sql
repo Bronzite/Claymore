@@ -2,13 +2,13 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 03/17/2017 20:21:22
--- Generated from EDMX file: C:\Users\bronz\Documents\Visual Studio 2015\Projects\Claymore\Claymore\Models\ClaymoreDataModel.edmx
+-- Date Created: 03/18/2017 08:08:03
+-- Generated from EDMX file: C:\Users\bronz_000\Source\Repos\Claymore\Claymore\Models\ClaymoreDataModel.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
 GO
-USE [aspnet-Claymore-20170215055048];
+USE [Claymore];
 GO
 IF SCHEMA_ID(N'dbo') IS NULL EXECUTE(N'CREATE SCHEMA [dbo]');
 GO
@@ -53,6 +53,9 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_DocumentSession]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Documents] DROP CONSTRAINT [FK_DocumentSession];
 GO
+IF OBJECT_ID(N'[dbo].[FK_CharacterOwnershipCharacter]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[CharacterOwnerships] DROP CONSTRAINT [FK_CharacterOwnershipCharacter];
+GO
 IF OBJECT_ID(N'[dbo].[FK_Attribute_inherits_XPAsset]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[XPAssets_Attribute] DROP CONSTRAINT [FK_Attribute_inherits_XPAsset];
 GO
@@ -90,6 +93,9 @@ IF OBJECT_ID(N'[dbo].[Campaigns]', 'U') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[Documents]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Documents];
+GO
+IF OBJECT_ID(N'[dbo].[CharacterOwnerships]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[CharacterOwnerships];
 GO
 IF OBJECT_ID(N'[dbo].[XPAssets_Attribute]', 'U') IS NOT NULL
     DROP TABLE [dbo].[XPAssets_Attribute];
