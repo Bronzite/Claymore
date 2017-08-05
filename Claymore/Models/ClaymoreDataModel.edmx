@@ -14,6 +14,10 @@
     <EntitySet Name="Campaigns" EntityType="Claymore.Models.Store.Campaigns" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Documents" EntityType="Claymore.Models.Store.Documents" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="CharacterOwnerships" EntityType="Claymore.Models.Store.CharacterOwnerships" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Capitals" EntityType="Claymore.Models.Store.Capitals" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Currencies" EntityType="Claymore.Models.Store.Currencies" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="LiquidAssetChanges" EntityType="Claymore.Models.Store.LiquidAssetChanges" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Capitals_LiquidCapitalAccount" EntityType="Claymore.Models.Store.Capitals_LiquidCapitalAccount" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="XPAssets_Attribute" EntityType="Claymore.Models.Store.XPAssets_Attribute" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="XPAssets_Skill" EntityType="Claymore.Models.Store.XPAssets_Skill" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="XPAssets_Trait" EntityType="Claymore.Models.Store.XPAssets_Trait" store:Type="Tables" Schema="dbo" />
@@ -71,6 +75,18 @@
     <AssociationSet Name="CharacterOwnershipCharacter" Association="Claymore.Models.Store.CharacterOwnershipCharacter">
       <End Role="CharacterOwnership" EntitySet="CharacterOwnerships" />
       <End Role="Character" EntitySet="Characters" />
+    </AssociationSet>
+    <AssociationSet Name="CurrencyLiquidCapitalAccount" Association="Claymore.Models.Store.CurrencyLiquidCapitalAccount">
+      <End Role="Currency" EntitySet="Currencies" />
+      <End Role="LiquidCapitalAccount" EntitySet="Capitals_LiquidCapitalAccount" />
+    </AssociationSet>
+    <AssociationSet Name="LiquidAssetChangeLiquidCapitalAccount" Association="Claymore.Models.Store.LiquidAssetChangeLiquidCapitalAccount">
+      <End Role="LiquidAssetChange" EntitySet="LiquidAssetChanges" />
+      <End Role="LiquidCapitalAccount" EntitySet="Capitals_LiquidCapitalAccount" />
+    </AssociationSet>
+    <AssociationSet Name="FK_LiquidCapitalAccount_inherits_Capital" Association="Claymore.Models.Store.FK_LiquidCapitalAccount_inherits_Capital">
+      <End Role="Capital" EntitySet="Capitals" />
+      <End Role="LiquidCapitalAccount" EntitySet="Capitals_LiquidCapitalAccount" />
     </AssociationSet>
     <AssociationSet Name="FK_Attribute_inherits_XPAsset" Association="Claymore.Models.Store.FK_Attribute_inherits_XPAsset">
       <End Role="XPAsset" EntitySet="XPAssets" />
@@ -162,6 +178,38 @@
     <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
     <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
     <Property Name="CharacterId" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Capitals">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Currencies">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="LiquidAssetChanges">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="DateTime" Type="datetime" Nullable="false" />
+    <Property Name="InUniverseDateTime" Type="datetime" Nullable="true" />
+    <Property Name="LiquidCapitalAccountId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Description" Type="nvarchar(max)" Nullable="true" />
+  </EntityType>
+  <EntityType Name="Capitals_LiquidCapitalAccount">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="CurrencyId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Balance" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
   </EntityType>
   <EntityType Name="XPAssets_Attribute">
     <Key>
@@ -317,6 +365,30 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="CurrencyLiquidCapitalAccount">
+    <End Role="Currency" Type="Claymore.Models.Store.Currencies" Multiplicity="1" />
+    <End Role="LiquidCapitalAccount" Type="Claymore.Models.Store.Capitals_LiquidCapitalAccount" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Currency">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="LiquidCapitalAccount">
+        <PropertyRef Name="CurrencyId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="LiquidAssetChangeLiquidCapitalAccount">
+    <End Role="LiquidAssetChange" Type="Claymore.Models.Store.LiquidAssetChanges" Multiplicity="*" />
+    <End Role="LiquidCapitalAccount" Type="Claymore.Models.Store.Capitals_LiquidCapitalAccount" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="LiquidCapitalAccount">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="LiquidAssetChange">
+        <PropertyRef Name="LiquidCapitalAccountId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_Attendance_Session">
     <End Role="Session" Type="Claymore.Models.Store.Sessions" Multiplicity="1" />
     <End Role="Attendance" Type="Claymore.Models.Store.Attendance" Multiplicity="*" />
@@ -362,6 +434,20 @@
       </Principal>
       <Dependent Role="CampaignSession">
         <PropertyRef Name="Sessions_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_LiquidCapitalAccount_inherits_Capital">
+    <End Role="Capital" Type="Claymore.Models.Store.Capitals" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="LiquidCapitalAccount" Type="Claymore.Models.Store.Capitals_LiquidCapitalAccount" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Capital">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="LiquidCapitalAccount">
+        <PropertyRef Name="Id" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -477,6 +563,17 @@
           <AssociationSet Name="CharacterOwnershipCharacter" Association="Claymore.Models.CharacterOwnershipCharacter">
             <End Role="CharacterOwnership" EntitySet="CharacterOwnerships" />
             <End Role="Character" EntitySet="Characters" />
+          </AssociationSet>
+          <EntitySet Name="Capitals" EntityType="Claymore.Models.Capital" />
+          <EntitySet Name="Currencies" EntityType="Claymore.Models.Currency" />
+          <AssociationSet Name="CurrencyLiquidCapitalAccount" Association="Claymore.Models.CurrencyLiquidCapitalAccount">
+            <End Role="Currency" EntitySet="Currencies" />
+            <End Role="LiquidCapitalAccount" EntitySet="Capitals" />
+          </AssociationSet>
+          <EntitySet Name="LiquidAssetChanges" EntityType="Claymore.Models.LiquidAssetChange" />
+          <AssociationSet Name="LiquidAssetChangeLiquidCapitalAccount" Association="Claymore.Models.LiquidAssetChangeLiquidCapitalAccount">
+            <End Role="LiquidAssetChange" EntitySet="LiquidAssetChanges" />
+            <End Role="LiquidCapitalAccount" EntitySet="Capitals" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="Character">
@@ -703,6 +800,62 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Capital">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="Name" Type="String" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LiquidCapitalAccount" BaseType="Claymore.Models.Capital" >
+          <NavigationProperty Name="Currency" Relationship="Claymore.Models.CurrencyLiquidCapitalAccount" FromRole="LiquidCapitalAccount" ToRole="Currency" />
+          <Property Name="CurrencyId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="LiquidAssetChanges" Relationship="Claymore.Models.LiquidAssetChangeLiquidCapitalAccount" FromRole="LiquidCapitalAccount" ToRole="LiquidAssetChange" />
+          <Property Name="Balance" Type="String" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Currency">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <NavigationProperty Name="LiquidCapitalAccounts" Relationship="Claymore.Models.CurrencyLiquidCapitalAccount" FromRole="Currency" ToRole="LiquidCapitalAccount" />
+        </EntityType>
+        <Association Name="CurrencyLiquidCapitalAccount">
+          <End Type="Claymore.Models.Currency" Role="Currency" Multiplicity="1" />
+          <End Type="Claymore.Models.LiquidCapitalAccount" Role="LiquidCapitalAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currency">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="LiquidCapitalAccount">
+              <PropertyRef Name="CurrencyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="LiquidAssetChange">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="DateTime" Type="DateTime" Nullable="false" />
+          <Property Name="InUniverseDateTime" Type="DateTime" Nullable="true" />
+          <NavigationProperty Name="LiquidCapitalAccount" Relationship="Claymore.Models.LiquidAssetChangeLiquidCapitalAccount" FromRole="LiquidAssetChange" ToRole="LiquidCapitalAccount" />
+          <Property Name="LiquidCapitalAccountId" Type="Guid" Nullable="false" />
+          <Property Name="Description" Type="String" Nullable="true" />
+        </EntityType>
+        <Association Name="LiquidAssetChangeLiquidCapitalAccount">
+          <End Type="Claymore.Models.LiquidAssetChange" Role="LiquidAssetChange" Multiplicity="*" />
+          <End Type="Claymore.Models.LiquidCapitalAccount" Role="LiquidCapitalAccount" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="LiquidCapitalAccount">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="LiquidAssetChange">
+              <PropertyRef Name="LiquidCapitalAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -814,6 +967,40 @@
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="UserId" ColumnName="UserId" />
           <ScalarProperty Name="CharacterId" ColumnName="CharacterId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Capitals">
+      <EntityTypeMapping TypeName="IsTypeOf(Claymore.Models.Capital)">
+        <MappingFragment StoreEntitySet="Capitals">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(Claymore.Models.LiquidCapitalAccount)">
+        <MappingFragment StoreEntitySet="Capitals_LiquidCapitalAccount">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="CurrencyId" ColumnName="CurrencyId" />
+          <ScalarProperty Name="Balance" ColumnName="Balance" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Currencies">
+      <EntityTypeMapping TypeName="IsTypeOf(Claymore.Models.Currency)">
+        <MappingFragment StoreEntitySet="Currencies">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LiquidAssetChanges">
+      <EntityTypeMapping TypeName="IsTypeOf(Claymore.Models.LiquidAssetChange)">
+        <MappingFragment StoreEntitySet="LiquidAssetChanges">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="DateTime" ColumnName="DateTime" />
+          <ScalarProperty Name="InUniverseDateTime" ColumnName="InUniverseDateTime" />
+          <ScalarProperty Name="LiquidCapitalAccountId" ColumnName="LiquidCapitalAccountId" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

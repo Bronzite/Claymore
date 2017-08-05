@@ -2,8 +2,8 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 03/18/2017 08:08:03
--- Generated from EDMX file: C:\Users\bronz_000\Source\Repos\Claymore\Claymore\Models\ClaymoreDataModel.edmx
+-- Date Created: 05/03/2017 12:13:32
+-- Generated from EDMX file: C:\Users\bronz\Documents\Visual Studio 2015\Projects\Claymore\Claymore\Models\ClaymoreDataModel.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
@@ -194,6 +194,38 @@ CREATE TABLE [dbo].[CharacterOwnerships] (
 );
 GO
 
+-- Creating table 'Capitals'
+CREATE TABLE [dbo].[Capitals] (
+    [Id] uniqueidentifier  NOT NULL,
+    [Name] nvarchar(max)  NOT NULL
+);
+GO
+
+-- Creating table 'Currencies'
+CREATE TABLE [dbo].[Currencies] (
+    [Id] uniqueidentifier  NOT NULL,
+    [Name] nvarchar(max)  NOT NULL
+);
+GO
+
+-- Creating table 'LiquidAssetChanges'
+CREATE TABLE [dbo].[LiquidAssetChanges] (
+    [Id] uniqueidentifier  NOT NULL,
+    [DateTime] datetime  NOT NULL,
+    [InUniverseDateTime] datetime  NULL,
+    [LiquidCapitalAccountId] uniqueidentifier  NOT NULL,
+    [Description] nvarchar(max)  NULL
+);
+GO
+
+-- Creating table 'Capitals_LiquidCapitalAccount'
+CREATE TABLE [dbo].[Capitals_LiquidCapitalAccount] (
+    [CurrencyId] uniqueidentifier  NOT NULL,
+    [Balance] nvarchar(max)  NOT NULL,
+    [Id] uniqueidentifier  NOT NULL
+);
+GO
+
 -- Creating table 'XPAssets_Attribute'
 CREATE TABLE [dbo].[XPAssets_Attribute] (
     [LinkBonus] int  NOT NULL,
@@ -287,6 +319,30 @@ GO
 -- Creating primary key on [Id] in table 'CharacterOwnerships'
 ALTER TABLE [dbo].[CharacterOwnerships]
 ADD CONSTRAINT [PK_CharacterOwnerships]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'Capitals'
+ALTER TABLE [dbo].[Capitals]
+ADD CONSTRAINT [PK_Capitals]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'Currencies'
+ALTER TABLE [dbo].[Currencies]
+ADD CONSTRAINT [PK_Currencies]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'LiquidAssetChanges'
+ALTER TABLE [dbo].[LiquidAssetChanges]
+ADD CONSTRAINT [PK_LiquidAssetChanges]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'Capitals_LiquidCapitalAccount'
+ALTER TABLE [dbo].[Capitals_LiquidCapitalAccount]
+ADD CONSTRAINT [PK_Capitals_LiquidCapitalAccount]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
@@ -511,6 +567,45 @@ GO
 CREATE INDEX [IX_FK_CharacterOwnershipCharacter]
 ON [dbo].[CharacterOwnerships]
     ([CharacterId]);
+GO
+
+-- Creating foreign key on [CurrencyId] in table 'Capitals_LiquidCapitalAccount'
+ALTER TABLE [dbo].[Capitals_LiquidCapitalAccount]
+ADD CONSTRAINT [FK_CurrencyLiquidCapitalAccount]
+    FOREIGN KEY ([CurrencyId])
+    REFERENCES [dbo].[Currencies]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_CurrencyLiquidCapitalAccount'
+CREATE INDEX [IX_FK_CurrencyLiquidCapitalAccount]
+ON [dbo].[Capitals_LiquidCapitalAccount]
+    ([CurrencyId]);
+GO
+
+-- Creating foreign key on [LiquidCapitalAccountId] in table 'LiquidAssetChanges'
+ALTER TABLE [dbo].[LiquidAssetChanges]
+ADD CONSTRAINT [FK_LiquidAssetChangeLiquidCapitalAccount]
+    FOREIGN KEY ([LiquidCapitalAccountId])
+    REFERENCES [dbo].[Capitals_LiquidCapitalAccount]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_LiquidAssetChangeLiquidCapitalAccount'
+CREATE INDEX [IX_FK_LiquidAssetChangeLiquidCapitalAccount]
+ON [dbo].[LiquidAssetChanges]
+    ([LiquidCapitalAccountId]);
+GO
+
+-- Creating foreign key on [Id] in table 'Capitals_LiquidCapitalAccount'
+ALTER TABLE [dbo].[Capitals_LiquidCapitalAccount]
+ADD CONSTRAINT [FK_LiquidCapitalAccount_inherits_Capital]
+    FOREIGN KEY ([Id])
+    REFERENCES [dbo].[Capitals]
+        ([Id])
+    ON DELETE CASCADE ON UPDATE NO ACTION;
 GO
 
 -- Creating foreign key on [Id] in table 'XPAssets_Attribute'

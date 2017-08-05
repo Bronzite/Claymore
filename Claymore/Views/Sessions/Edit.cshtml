@@ -1,4 +1,5 @@
-﻿@model Claymore.Models.Session
+﻿@using Claymore.Models
+@model Claymore.Models.Session
 
 @{
     ViewBag.Title = "Edit";
@@ -9,46 +10,90 @@
 
 @using (Html.BeginForm())
 {
+
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
-        <h4>Session</h4>
+        <h2>Session</h2>
+        <button class="btn btn-primary" type="submit">Save</button>
         <hr />
+
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(Model => Model.Id)
+        <span><b>Session Name</b><input class="form-control" name="Name" value="@Model.Name" /></span>
+        <span><b>Session Date</b><input class="form-control" name="SessionDate" type="datetime" value="@Model.SessionDate.ToShortDateString()"</span>
+        <span><b>Base XP</b><input class="form-control" name="BaseXP" value="@Model.BaseXP.ToString()"</span>
+        <h3><Campaigns</h3>
+        @{
+            Claymore.Models.ClaymoreDataModelContainer db = new Claymore.Models.ClaymoreDataModelContainer();
+        }
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Campaign camp in db.Campaigns)
+                {
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                    bool bCheck = false;
+                    foreach (Campaign chkCampaign in Model.Campaigns)
+                    {
+                        if (chkCampaign.Id.Equals(camp.Id)) { bCheck = true; }
+                    }
+                    <tr>
+                        @if (Model.Campaigns.Contains(camp))
+                        {
+                            <td><input class="form-control" type="checkbox" name="@camp.Id.ToString()" checked /></td>
+                            <td><b>@camp.Name.ToString()</b></td>
+                        }
+                        else
+                        {
+                            <td><input class="form-control" type="checkbox" name="@camp.Id.ToString()" /></td>
+                            <td><b>@camp.Name.ToString()</b></td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <h3>Characters</h3>
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Character character in db.Characters)
+                {
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.SessionDate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.SessionDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.SessionDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                    bool bCheck = false;
+                    foreach (Character chkCharacter in Model.Characters)
+                    {
+                        if (chkCharacter.Id.Equals(character.Id)) { bCheck = true; }
+                    }
+                    <tr>
+                        @if (bCheck)
+                        {
+                            <td>                <input class="form-control" type="checkbox" name="@character.Id.ToString()" checked />            </td>
+                            <td><b>@character.Name.ToString()</b></td>
+                        }
+                        else
+                        {
+                            <td><input class="form-control" type="checkbox" name="@character.Id.ToString()" /></td>
+                            <td><b>@character.Name.ToString()</b></td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.XPTransactionId, "XPTransactionId", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("XPTransactionId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.XPTransactionId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </div>
     </div>
-}
 
+            }
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>

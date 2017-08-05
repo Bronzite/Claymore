@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Claymore.Models;
+using System.Data.Entity.Validation;
 
 namespace Claymore.Controllers
 {
@@ -39,6 +40,58 @@ namespace Claymore.Controllers
             return View(session);
         }
 
+        public ActionResult RefreshAllSessionXP()
+        {
+            
+            foreach(Session s in db.Sessions)
+            {
+                XPTransaction oldTrans = s.XPTransaction;
+                XPTransaction trans = new XPTransaction();
+                trans.Description = s.XPTransaction.Description;
+                trans.Id = Guid.NewGuid();
+                trans.Timestamp = s.XPTransaction.Timestamp;
+                foreach(Session newS in s.XPTransaction.Sessions) { trans.Sessions.Add(newS); }
+                s.XPTransaction = trans;
+                List<XPChange> RemoveChanges = new List<XPChange>(oldTrans.Changes);
+                foreach(XPChange chng in RemoveChanges)
+                {
+                    db.XPChanges.Remove(chng);
+                }
+                db.XPTransactions.Remove(oldTrans);
+                //trans.Changes.Clear();
+                foreach(Character c in s.Characters)
+                {
+                    XPAsset XPPool = null;
+                    foreach(XPAsset curXPAsset in c.XPAssets)
+                    {
+                        if(curXPAsset.Name.Equals("XP Pool"))
+                        {
+                            XPPool = curXPAsset;
+                        }
+                    }
+                    if (XPPool != null)
+                    {
+                        XPChange xpChange = new XPChange();
+                        xpChange.Amount = int.Parse(s.BaseXP);
+                        xpChange.Transaction = trans;
+                        xpChange.XPTransactionId = trans.Id;
+                        xpChange.XPAsset = XPPool;
+                        xpChange.XPAssetId = XPPool.Id;
+                        xpChange.Id = Guid.NewGuid();
+                        trans.Changes.Add(xpChange);
+                    }
+                    else
+                    {
+                        //trans.Id = Guid.NewGuid();
+                    }
+                }
+                
+            }
+            db.SaveChanges();
+            XPAsset.RefreshAllXPAssets();
+            return Redirect("~/Sessions/Index");
+        }
+
         // GET: Sessions/Create
         public ActionResult Create()
         {
@@ -51,13 +104,29 @@ namespace Claymore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,SessionDate,XPTransactionId")] Session session)
+        public ActionResult Create([Bind(Include = "Id,Name,SessionDate,BaseXP")] Session session)
         {
             if (ModelState.IsValid)
             {
+
                 session.Id = Guid.NewGuid();
+                session.XPTransaction = new XPTransaction();
+                session.XPTransaction.Sessions.Add(session);
+                session.XPTransaction.Timestamp = DateTime.Now;
+                session.XPTransaction.Description = string.Format("{0} XP", session.Name);
+                session.XPTransaction.Id = Guid.NewGuid();
+                db.XPTransactions.Add(session.XPTransaction);
                 db.Sessions.Add(session);
-                db.SaveChanges();
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch(DbEntityValidationException hrve)
+                {
+                    
+                    TempData["error"] = hrve;
+                    return RedirectToAction("Create");
+                }
                 return RedirectToAction("Index");
             }
 
@@ -86,16 +155,38 @@ namespace Claymore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,SessionDate,XPTransactionId")] Session session)
+        public ActionResult Edit(FormCollection coll)
         {
-            if (ModelState.IsValid)
+            Session retval = db.Sessions.Find(Guid.Parse(coll["Id"]));
+
+            retval.Name = coll["Name"];
+            retval.SessionDate = DateTime.Parse(coll["SessionDate"]);
+            retval.BaseXP = coll["BaseXP"];
+
+            retval.Campaigns.Clear();
+            retval.Characters.Clear();
+            foreach (string sKey in coll.Keys)
             {
-                db.Entry(session).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                Guid guidKey = Guid.Empty;
+                if (Guid.TryParse(sKey, out guidKey))
+                {
+                    foreach (Campaign c in db.Campaigns)
+                    {
+                        if (guidKey.Equals(c.Id))
+                            retval.Campaigns.Add(c);
+                    }
+                    foreach (Character c in db.Characters)
+                    {
+                        if (guidKey.Equals(c.Id))
+                            retval.Characters.Add(c);
+                    }
+
+                }
             }
-            ViewBag.XPTransactionId = new SelectList(db.XPTransactions, "Id", "Id", session.XPTransactionId);
-            return View(session);
+            db.SaveChanges();
+            //if()
+            //ViewBag.XPTransactionId = new SelectList(db.XPTransactions, "Id", "Id", session.XPTransactionId);
+            return View(retval);
         }
 
         // GET: Sessions/Delete/5

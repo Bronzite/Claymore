@@ -1,16 +1,35 @@
-﻿@model Claymore.Models.Session
+﻿@using System.Data.Entity.Validation
+@model Claymore.Models.Session
 
 @{
     ViewBag.Title = "Create";
+
+    if (TempData.ContainsKey("error"))
+    {
+        DbEntityValidationException dbve = TempData["error"] as DbEntityValidationException; 
+        <div class="alert alert-danger">
+            <ul>
+
+            @foreach (DbEntityValidationResult devr in dbve.EntityValidationErrors)
+            {
+                foreach (DbValidationError deverr in devr.ValidationErrors)
+                {
+                <li>@deverr.ErrorMessage</li>
+                }
+            }
+                </ul>
+        </div>
+                
+       }
 }
 
 <h2>Create</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Session</h4>
         <hr />
@@ -32,10 +51,10 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.XPTransactionId, "XPTransactionId", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.BaseXP, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("XPTransactionId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.XPTransactionId, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.BaseXP, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.BaseXP, "", new { @class = "text-danger" })
             </div>
         </div>
 

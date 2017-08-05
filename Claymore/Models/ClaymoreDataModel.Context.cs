@@ -33,5 +33,8 @@ namespace Claymore.Models
         public virtual DbSet<Campaign> Campaigns { get; set; }
         public virtual DbSet<Document> Documents { get; set; }
         public virtual DbSet<CharacterOwnership> CharacterOwnerships { get; set; }
+        public virtual DbSet<Capital> Capitals { get; set; }
+        public virtual DbSet<Currency> Currencies { get; set; }
+        public virtual DbSet<LiquidAssetChange> LiquidAssetChanges { get; set; }
     }
 }

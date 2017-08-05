@@ -186,6 +186,9 @@
     <Compile Include="Models\Campaign.cs">
       <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Capital.cs">
+      <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Character.cs">
       <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
     </Compile>
@@ -209,6 +212,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ClaymoreDataModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\Currency.cs">
+      <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Document.cs">
       <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
     </Compile>
@@ -217,6 +223,12 @@
       <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\LiquidAssetChange.cs">
+      <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\LiquidCapitalAccount.cs">
+      <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Session.cs">
       <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
