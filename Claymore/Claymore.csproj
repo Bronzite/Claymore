@@ -25,6 +25,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -183,6 +184,23 @@
       <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\AttributeExtension.cs" />
+    <Compile Include="Models\BattleforceStats.cs">
+      <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BattleforceStatsSpecialAbility.cs">
+      <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BattleMech.cs">
+      <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BattleMechBattleForceStatus.cs">
+      <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BattleMechExtensions.cs" />
+    <Compile Include="Models\BattleMechModel.cs">
+      <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BattleMechsController.cs" />
     <Compile Include="Models\Campaign.cs">
       <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
     </Compile>
@@ -222,6 +240,9 @@
     <Compile Include="Models\EdgePoints.cs">
       <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Equipment.cs">
+      <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\LiquidAssetChange.cs">
       <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
@@ -230,6 +251,12 @@
       <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\MovementAbility.cs">
+      <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MovementType.cs">
+      <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Session.cs">
       <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
     </Compile>
@@ -237,6 +264,9 @@
       <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SortingExtensions.cs" />
+    <Compile Include="Models\SpecialAbility.cs">
+      <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Trait.cs">
       <DependentUpon>ClaymoreDataModel.tt</DependentUpon>
     </Compile>
@@ -289,6 +319,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\MasterData.sql" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
@@ -343,6 +374,9 @@
     <Content Include="Views\XPTransactions\Details.cshtml" />
     <Content Include="Views\XPTransactions\Edit.cshtml" />
     <Content Include="Views\XPTransactions\Index.cshtml" />
+    <Content Include="Views\BattleMechs\Index.cshtml" />
+    <Content Include="Views\BattleMechs\AddBattleMech.cshtml" />
+    <Content Include="Views\BattleMechs\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

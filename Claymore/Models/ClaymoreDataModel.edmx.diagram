@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="9a6dbfc6bbef465ea1af355c38008c26" Name="Diagram1" ZoomLevel="72" >
+        <EntityTypeShape EntityType="Claymore.Models.Character" Width="2.5" PointX="3.375" PointY="0.5" />
+        <EntityTypeShape EntityType="Claymore.Models.Session" Width="3.5" PointX="6.375" PointY="0.5" />
+        <AssociationConnector Association="Claymore.Models.Attendance" />
+        <EntityTypeShape EntityType="Claymore.Models.XPAsset" Width="1.5" PointX="2.625" PointY="3.125" />
+        <EntityTypeShape EntityType="Claymore.Models.Attribute" Width="1.5" PointX="5.25" PointY="4.125" />
+        <InheritanceConnector EntityType="Claymore.Models.Attribute" />
+        <EntityTypeShape EntityType="Claymore.Models.Skill" Width="1.5" PointX="1.625" PointY="5.625" />
+        <InheritanceConnector EntityType="Claymore.Models.Skill" />
+        <EntityTypeShape EntityType="Claymore.Models.Trait" Width="1.5" PointX="4" PointY="5.625" />
+        <InheritanceConnector EntityType="Claymore.Models.Trait" />
+        <EntityTypeShape EntityType="Claymore.Models.XPTransaction" Width="1.5" PointX="10.125" PointY="4.75" />
+        <EntityTypeShape EntityType="Claymore.Models.XPChange" Width="1.5" PointX="7.5" PointY="4.5" />
+        <AssociationConnector Association="Claymore.Models.XPChangeXPTransaction" />
+        <AssociationConnector Association="Claymore.Models.XPChangeXPAsset" />
+        <EntityTypeShape EntityType="Claymore.Models.EdgePoints" Width="1.5" PointX="0.5" PointY="3.625" />
+        <InheritanceConnector EntityType="Claymore.Models.EdgePoints" />
+        <AssociationConnector Association="Claymore.Models.XPTransactionSession" />
+        <InheritanceConnector EntityType="Claymore.Models.Attribute" />
+        <InheritanceConnector EntityType="Claymore.Models.Skill" />
+        <InheritanceConnector EntityType="Claymore.Models.Trait" />
+        <InheritanceConnector EntityType="Claymore.Models.EdgePoints" />
+        <AssociationConnector Association="Claymore.Models.CharacterXPAsset" />
+        <EntityTypeShape EntityType="Claymore.Models.Campaign" Width="1.5" PointX="12.375" PointY="3.125" />
+        <AssociationConnector Association="Claymore.Models.CampaignSession" />
+        <AssociationConnector Association="Claymore.Models.CampaignSession1" />
+        <AssociationConnector Association="Claymore.Models.CampaignXPTransaction" />
+        <EntityTypeShape EntityType="Claymore.Models.Document" Width="1.5" PointX="12.125" PointY="0.5" />
+        <AssociationConnector Association="Claymore.Models.DocumentCharacter" />
+        <AssociationConnector Association="Claymore.Models.DocumentSession" />
+        <EntityTypeShape EntityType="Claymore.Models.CharacterOwnership" Width="1.875" PointX="0.5" PointY="0.5" />
+        <AssociationConnector Association="Claymore.Models.CharacterOwnershipCharacter" />
+        <EntityTypeShape EntityType="Claymore.Models.Capital" Width="1.5" PointX="15.25" PointY="2" />
+        <EntityTypeShape EntityType="Claymore.Models.LiquidCapitalAccount" Width="1.5" PointX="18.125" PointY="2.875" />
+        <InheritanceConnector EntityType="Claymore.Models.LiquidCapitalAccount" />
+        <EntityTypeShape EntityType="Claymore.Models.Currency" Width="1.5" PointX="17.75" PointY="1" />
+        <AssociationConnector Association="Claymore.Models.CurrencyLiquidCapitalAccount" />
+        <EntityTypeShape EntityType="Claymore.Models.LiquidAssetChange" Width="1.5" PointX="20.5" PointY="4.625" />
+        <AssociationConnector Association="Claymore.Models.LiquidAssetChangeLiquidCapitalAccount" />
+        <EntityTypeShape EntityType="Claymore.Models.Equipment" Width="1.5" PointX="4.125" PointY="7.5" />
+        <AssociationConnector Association="Claymore.Models.Owner" />
+        <EntityTypeShape EntityType="Claymore.Models.BattleMechModel" Width="1.5" PointX="8.875" PointY="7" />
+        <EntityTypeShape EntityType="Claymore.Models.BattleforceStats" Width="1.5" PointX="11.25" PointY="7.125" />
+        <EntityTypeShape EntityType="Claymore.Models.MovementType" Width="1.5" PointX="15.5" PointY="6.5" />
+        <EntityTypeShape EntityType="Claymore.Models.MovementAbility" Width="1.5" PointX="13.5" PointY="6.875" />
+        <AssociationConnector Association="Claymore.Models.MovementAbilityMovementType" />
+        <AssociationConnector Association="Claymore.Models.MovementAbilityBattleforceStats" />
+        <EntityTypeShape EntityType="Claymore.Models.SpecialAbility" Width="1.5" PointX="15.75" PointY="9.25" />
+        <EntityTypeShape EntityType="Claymore.Models.BattleforceStatsSpecialAbility" Width="1.5" PointX="13.5" PointY="9.25" />
+        <AssociationConnector Association="Claymore.Models.BattleforceStatsSpecialAbilitySpecialAbility" />
+        <AssociationConnector Association="Claymore.Models.BattleforceStatsBattleforceStatsSpecialAbility" />
+        <AssociationConnector Association="Claymore.Models.BattleMechModelBattleforceStats" />
+        <EntityTypeShape EntityType="Claymore.Models.BattleMech" Width="1.5" PointX="6.75" PointY="9.625" />
+        <InheritanceConnector EntityType="Claymore.Models.BattleMech" />
+        <AssociationConnector Association="Claymore.Models.BattleMechBattleMechModel" />
+        <EntityTypeShape EntityType="Claymore.Models.BattleMechBattleForceStatus" Width="1.5" PointX="9.125" PointY="10.125" />
+        <AssociationConnector Association="Claymore.Models.BattleMechBattleForceStatusBattleMech" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

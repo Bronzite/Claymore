@@ -36,5 +36,13 @@ namespace Claymore.Models
         public virtual DbSet<Capital> Capitals { get; set; }
         public virtual DbSet<Currency> Currencies { get; set; }
         public virtual DbSet<LiquidAssetChange> LiquidAssetChanges { get; set; }
+        public virtual DbSet<Equipment> Equipments { get; set; }
+        public virtual DbSet<BattleMechModel> BattleMechModels { get; set; }
+        public virtual DbSet<BattleforceStats> BattleforceStats { get; set; }
+        public virtual DbSet<MovementType> MovementTypes { get; set; }
+        public virtual DbSet<MovementAbility> MovementAbilities { get; set; }
+        public virtual DbSet<SpecialAbility> SpecialAbilities { get; set; }
+        public virtual DbSet<BattleforceStatsSpecialAbility> BattleforceStatsSpecialAbilities { get; set; }
+        public virtual DbSet<BattleMechBattleForceStatus> BattleMechBattleForceStatus { get; set; }
     }
 }

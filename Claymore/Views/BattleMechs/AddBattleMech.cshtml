@@ -1,0 +1,32 @@
+﻿@using Claymore.Models
+@model List<BattleMechModel>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>BattleMech</h1>
+<form action="~/BattleMechs/AddBattleMech" method="post">
+    <h3>Select Mech:</h3>
+    <select class="form-control" name="battlemechId">
+        @foreach(BattleMechModel bmModel in Model)
+        {
+            <option value="@bmModel.Id.ToString()">@bmModel.ModelNumber @bmModel.ModelName</option>
+        }
+    </select>
+    <h3>Owner:</h3>
+    <select class="form-control" name="ownerId">
+        <option value="@Guid.Empty.ToString()">None</option>
+        @{ 
+            ClaymoreDataModelContainer db = new ClaymoreDataModelContainer();
+            foreach(Character curChar in db.Characters)
+            {
+                <option value="@curChar.Id.ToString()">@curChar.Name</option>
+            }
+        }
+    </select>
+    <h3>Name:</h3>
+    <input name="mechName" value="" class="form-control" placeholder="Mech Name"/>
+    <button class="btn btn-default" type="submit">Add BattleTech</button>
+</form>
+
+

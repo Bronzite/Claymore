@@ -17,15 +17,18 @@ namespace Claymore.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Character()
         {
+            this.NPC = false;
             this.Sessions = new HashSet<Session>();
             this.XPAssets = new HashSet<XPAsset>();
             this.Documents = new HashSet<Document>();
             this.CharacterOwnerships = new HashSet<CharacterOwnership>();
+            this.Equipment = new HashSet<Equipment>();
         }
     
         public System.Guid Id { get; set; }
         public string Name { get; set; }
         public Nullable<System.DateTime> Birthdate { get; set; }
+        public bool NPC { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Session> Sessions { get; set; }
@@ -35,5 +38,7 @@ namespace Claymore.Models
         public virtual ICollection<Document> Documents { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CharacterOwnership> CharacterOwnerships { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Equipment> Equipment { get; set; }
     }
 }

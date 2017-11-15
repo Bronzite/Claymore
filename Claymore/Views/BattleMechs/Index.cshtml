@@ -1,0 +1,90 @@
+﻿@using Claymore.Models
+@model List<BattleMech>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Model</th>
+            <th>Name</th>
+            <th>Owner</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    @foreach(BattleMech bm in Model)
+    {
+        <tr>
+            <td>@bm.Model.ModelNumber</td>
+            <td><a href="~/BattleMechs/Details/@bm.Id.ToString()">
+
+    @if (bm.Name == "")
+    { @bm.Model.ModelName}
+    else
+    { @bm.Name}
+</a>
+
+            </td>
+            <td>
+                @if(bm.Owner != null)
+                {
+                    <a href="~/Characters/Details/@bm.Owner.Id.ToString()">@bm.Owner.Name </a>
+                }
+                else
+                {
+                    <text>Claymore Consulting</text>
+                }
+                
+            </td>
+            <td>
+                @{ 
+                    BattleMechBattleForceStatus status = bm.LatestStatus;
+                    if(status == null)
+                    {
+                        <text>Unknown</text>
+                    }
+                    else
+                    {
+                        int iArmorPercent = (int)(100 * (double)status.Armor / (double)bm.Model.BattleforceStat.Armor);
+                        int iStructurePercent = (int)(100 * (double)status.Structure / (double)bm.Model.BattleforceStat.Structure);
+                        int iCrits = status.CriticalHits;
+                        string sDescription = "";
+                        if(iArmorPercent==100 && iStructurePercent == 100 && iCrits==0)
+                        {
+                            sDescription = "Pristine";
+                        }
+                        else
+                        {
+                            if(iArmorPercent == 0)
+                            {
+                                if(iStructurePercent == 0)
+                                {
+                                    sDescription = "Wrecked";
+                                }
+                                else
+                                {
+                                    sDescription = string.Format("{0}% Structure",iStructurePercent);
+                                }
+                            }
+                            else
+                            {
+                                sDescription = string.Format("{0}% Armor", iArmorPercent);
+                            }
+                            if(iCrits > 0)
+                            {
+                                sDescription = string.Format("{0} + {1} Crits", sDescription, iCrits);
+                            }
+                        }
+
+                        <text>@sDescription</text>
+                    }
+                }
+            </td>
+        </tr>
+    }
+</table>
+@if (User.Identity.IsAuthenticated)
+{
+<a href="~/BattleMechs/AddBattleMech"><div class="btn btn-default">Add BattleMechs</div></a>
+}

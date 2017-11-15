@@ -17,7 +17,16 @@
     <EntitySet Name="Capitals" EntityType="Claymore.Models.Store.Capitals" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Currencies" EntityType="Claymore.Models.Store.Currencies" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="LiquidAssetChanges" EntityType="Claymore.Models.Store.LiquidAssetChanges" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Equipments" EntityType="Claymore.Models.Store.Equipments" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="BattleMechModels" EntityType="Claymore.Models.Store.BattleMechModels" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="BattleforceStats" EntityType="Claymore.Models.Store.BattleforceStats" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="MovementTypes" EntityType="Claymore.Models.Store.MovementTypes" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="MovementAbilities" EntityType="Claymore.Models.Store.MovementAbilities" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="SpecialAbilities" EntityType="Claymore.Models.Store.SpecialAbilities" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="BattleforceStatsSpecialAbilities" EntityType="Claymore.Models.Store.BattleforceStatsSpecialAbilities" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="BattleMechBattleForceStatus" EntityType="Claymore.Models.Store.BattleMechBattleForceStatus" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Capitals_LiquidCapitalAccount" EntityType="Claymore.Models.Store.Capitals_LiquidCapitalAccount" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Equipments_BattleMech" EntityType="Claymore.Models.Store.Equipments_BattleMech" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="XPAssets_Attribute" EntityType="Claymore.Models.Store.XPAssets_Attribute" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="XPAssets_Skill" EntityType="Claymore.Models.Store.XPAssets_Skill" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="XPAssets_Trait" EntityType="Claymore.Models.Store.XPAssets_Trait" store:Type="Tables" Schema="dbo" />
@@ -84,9 +93,45 @@
       <End Role="LiquidAssetChange" EntitySet="LiquidAssetChanges" />
       <End Role="LiquidCapitalAccount" EntitySet="Capitals_LiquidCapitalAccount" />
     </AssociationSet>
+    <AssociationSet Name="Owner" Association="Claymore.Models.Store.Owner">
+      <End Role="Equipment" EntitySet="Equipments" />
+      <End Role="Character" EntitySet="Characters" />
+    </AssociationSet>
+    <AssociationSet Name="MovementAbilityMovementType" Association="Claymore.Models.Store.MovementAbilityMovementType">
+      <End Role="MovementAbility" EntitySet="MovementAbilities" />
+      <End Role="MovementType" EntitySet="MovementTypes" />
+    </AssociationSet>
+    <AssociationSet Name="MovementAbilityBattleforceStats" Association="Claymore.Models.Store.MovementAbilityBattleforceStats">
+      <End Role="MovementAbility" EntitySet="MovementAbilities" />
+      <End Role="BattleforceStats" EntitySet="BattleforceStats" />
+    </AssociationSet>
+    <AssociationSet Name="BattleforceStatsSpecialAbilitySpecialAbility" Association="Claymore.Models.Store.BattleforceStatsSpecialAbilitySpecialAbility">
+      <End Role="BattleforceStatsSpecialAbility" EntitySet="BattleforceStatsSpecialAbilities" />
+      <End Role="SpecialAbility" EntitySet="SpecialAbilities" />
+    </AssociationSet>
+    <AssociationSet Name="BattleforceStatsBattleforceStatsSpecialAbility" Association="Claymore.Models.Store.BattleforceStatsBattleforceStatsSpecialAbility">
+      <End Role="BattleforceStats" EntitySet="BattleforceStats" />
+      <End Role="BattleforceStatsSpecialAbility" EntitySet="BattleforceStatsSpecialAbilities" />
+    </AssociationSet>
+    <AssociationSet Name="BattleMechModelBattleforceStats" Association="Claymore.Models.Store.BattleMechModelBattleforceStats">
+      <End Role="BattleMechModel" EntitySet="BattleMechModels" />
+      <End Role="BattleforceStats" EntitySet="BattleforceStats" />
+    </AssociationSet>
+    <AssociationSet Name="BattleMechBattleMechModel" Association="Claymore.Models.Store.BattleMechBattleMechModel">
+      <End Role="BattleMech" EntitySet="Equipments_BattleMech" />
+      <End Role="BattleMechModel" EntitySet="BattleMechModels" />
+    </AssociationSet>
+    <AssociationSet Name="BattleMechBattleForceStatusBattleMech" Association="Claymore.Models.Store.BattleMechBattleForceStatusBattleMech">
+      <End Role="BattleMechBattleForceStatus" EntitySet="BattleMechBattleForceStatus" />
+      <End Role="BattleMech" EntitySet="Equipments_BattleMech" />
+    </AssociationSet>
     <AssociationSet Name="FK_LiquidCapitalAccount_inherits_Capital" Association="Claymore.Models.Store.FK_LiquidCapitalAccount_inherits_Capital">
       <End Role="Capital" EntitySet="Capitals" />
       <End Role="LiquidCapitalAccount" EntitySet="Capitals_LiquidCapitalAccount" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BattleMech_inherits_Equipment" Association="Claymore.Models.Store.FK_BattleMech_inherits_Equipment">
+      <End Role="Equipment" EntitySet="Equipments" />
+      <End Role="BattleMech" EntitySet="Equipments_BattleMech" />
     </AssociationSet>
     <AssociationSet Name="FK_Attribute_inherits_XPAsset" Association="Claymore.Models.Store.FK_Attribute_inherits_XPAsset">
       <End Role="XPAsset" EntitySet="XPAssets" />
@@ -112,6 +157,7 @@
     <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Birthdate" Type="datetime" Nullable="true" />
+    <Property Name="NPC" Type="bit" Nullable="false" DefaultValue="false" />
   </EntityType>
   <EntityType Name="Sessions">
     <Key>
@@ -203,12 +249,104 @@
     <Property Name="LiquidCapitalAccountId" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Description" Type="nvarchar(max)" Nullable="true" />
   </EntityType>
+  <EntityType Name="Equipments">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="OwnerId" Type="uniqueidentifier" Nullable="true" />
+    <Property Name="Quantity" Type="float" Nullable="true" />
+  </EntityType>
+  <EntityType Name="BattleMechModels">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ModelNumber" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ModelName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Price" Type="int" Nullable="true" />
+  </EntityType>
+  <EntityType Name="BattleforceStats">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Size" Type="int" Nullable="false" />
+    <Property Name="ShortRangeDamage" Type="int" Nullable="false" />
+    <Property Name="MediumRangeDamage" Type="int" Nullable="false" />
+    <Property Name="LongRangeDamage" Type="int" Nullable="false" />
+    <Property Name="OverheatValue" Type="int" Nullable="false" />
+    <Property Name="Armor" Type="int" Nullable="false" />
+    <Property Name="Structure" Type="int" Nullable="false" />
+    <Property Name="PV" Type="int" Nullable="false" />
+    <Property Name="BattleMechModel_Id" Type="uniqueidentifier" Nullable="true" />
+  </EntityType>
+  <EntityType Name="MovementTypes">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Suffix" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MovementAbilities">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="MovementTypeId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="BattleforceStatsId" Type="uniqueidentifier" Nullable="true" />
+    <Property Name="Amount" Type="int" Nullable="false" DefaultValue="0" />
+  </EntityType>
+  <EntityType Name="SpecialAbilities">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Code" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Effect" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="BattleforceStatsSpecialAbilities">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="SpecialAbilityId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Parameter" Type="int" Nullable="true" />
+    <Property Name="ShortRange" Type="int" Nullable="true" />
+    <Property Name="MediumRange" Type="int" Nullable="true" />
+    <Property Name="LongRange" Type="int" Nullable="true" />
+    <Property Name="BattleforceStatsId" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="BattleMechBattleForceStatus">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Timestamp" Type="datetime" Nullable="false" />
+    <Property Name="Armor" Type="int" Nullable="false" DefaultValue="0" />
+    <Property Name="Structure" Type="int" Nullable="false" DefaultValue="0" />
+    <Property Name="EngineHits" Type="int" Nullable="false" DefaultValue="0" />
+    <Property Name="FireControlHits" Type="int" Nullable="false" DefaultValue="0" />
+    <Property Name="MPHits" Type="int" Nullable="false" DefaultValue="0" />
+    <Property Name="WeaponsHits" Type="int" Nullable="false" DefaultValue="0" />
+    <Property Name="BattleMechId" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
   <EntityType Name="Capitals_LiquidCapitalAccount">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="CurrencyId" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Balance" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Equipments_BattleMech">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="BattleMechModelId" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
   </EntityType>
   <EntityType Name="XPAssets_Attribute">
@@ -389,6 +527,102 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="Owner">
+    <End Role="Equipment" Type="Claymore.Models.Store.Equipments" Multiplicity="*" />
+    <End Role="Character" Type="Claymore.Models.Store.Characters" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Character">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Equipment">
+        <PropertyRef Name="OwnerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="MovementAbilityMovementType">
+    <End Role="MovementAbility" Type="Claymore.Models.Store.MovementAbilities" Multiplicity="*" />
+    <End Role="MovementType" Type="Claymore.Models.Store.MovementTypes" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="MovementType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="MovementAbility">
+        <PropertyRef Name="MovementTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="MovementAbilityBattleforceStats">
+    <End Role="MovementAbility" Type="Claymore.Models.Store.MovementAbilities" Multiplicity="*" />
+    <End Role="BattleforceStats" Type="Claymore.Models.Store.BattleforceStats" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="BattleforceStats">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="MovementAbility">
+        <PropertyRef Name="BattleforceStatsId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="BattleforceStatsSpecialAbilitySpecialAbility">
+    <End Role="BattleforceStatsSpecialAbility" Type="Claymore.Models.Store.BattleforceStatsSpecialAbilities" Multiplicity="*" />
+    <End Role="SpecialAbility" Type="Claymore.Models.Store.SpecialAbilities" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="SpecialAbility">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="BattleforceStatsSpecialAbility">
+        <PropertyRef Name="SpecialAbilityId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="BattleforceStatsBattleforceStatsSpecialAbility">
+    <End Role="BattleforceStats" Type="Claymore.Models.Store.BattleforceStats" Multiplicity="1" />
+    <End Role="BattleforceStatsSpecialAbility" Type="Claymore.Models.Store.BattleforceStatsSpecialAbilities" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BattleforceStats">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="BattleforceStatsSpecialAbility">
+        <PropertyRef Name="BattleforceStatsId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="BattleMechModelBattleforceStats">
+    <End Role="BattleMechModel" Type="Claymore.Models.Store.BattleMechModels" Multiplicity="0..1" />
+    <End Role="BattleforceStats" Type="Claymore.Models.Store.BattleforceStats" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BattleMechModel">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="BattleforceStats">
+        <PropertyRef Name="BattleMechModel_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="BattleMechBattleMechModel">
+    <End Role="BattleMech" Type="Claymore.Models.Store.Equipments_BattleMech" Multiplicity="*" />
+    <End Role="BattleMechModel" Type="Claymore.Models.Store.BattleMechModels" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="BattleMechModel">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="BattleMech">
+        <PropertyRef Name="BattleMechModelId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="BattleMechBattleForceStatusBattleMech">
+    <End Role="BattleMechBattleForceStatus" Type="Claymore.Models.Store.BattleMechBattleForceStatus" Multiplicity="*" />
+    <End Role="BattleMech" Type="Claymore.Models.Store.Equipments_BattleMech" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="BattleMech">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="BattleMechBattleForceStatus">
+        <PropertyRef Name="BattleMechId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_Attendance_Session">
     <End Role="Session" Type="Claymore.Models.Store.Sessions" Multiplicity="1" />
     <End Role="Attendance" Type="Claymore.Models.Store.Attendance" Multiplicity="*" />
@@ -447,6 +681,20 @@
         <PropertyRef Name="Id" />
       </Principal>
       <Dependent Role="LiquidCapitalAccount">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BattleMech_inherits_Equipment">
+    <End Role="Equipment" Type="Claymore.Models.Store.Equipments" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="BattleMech" Type="Claymore.Models.Store.Equipments_BattleMech" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Equipment">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="BattleMech">
         <PropertyRef Name="Id" />
       </Dependent>
     </ReferentialConstraint>
@@ -575,6 +823,46 @@
             <End Role="LiquidAssetChange" EntitySet="LiquidAssetChanges" />
             <End Role="LiquidCapitalAccount" EntitySet="Capitals" />
           </AssociationSet>
+          <EntitySet Name="Equipments" EntityType="Claymore.Models.Equipment" />
+          <AssociationSet Name="Owner" Association="Claymore.Models.Owner">
+            <End Role="Equipment" EntitySet="Equipments" />
+            <End Role="Character" EntitySet="Characters" />
+          </AssociationSet>
+          <EntitySet Name="BattleMechModels" EntityType="Claymore.Models.BattleMechModel" />
+          <EntitySet Name="BattleforceStats" EntityType="Claymore.Models.BattleforceStats" />
+          <EntitySet Name="MovementTypes" EntityType="Claymore.Models.MovementType" />
+          <EntitySet Name="MovementAbilities" EntityType="Claymore.Models.MovementAbility" />
+          <AssociationSet Name="MovementAbilityMovementType" Association="Claymore.Models.MovementAbilityMovementType">
+            <End Role="MovementAbility" EntitySet="MovementAbilities" />
+            <End Role="MovementType" EntitySet="MovementTypes" />
+          </AssociationSet>
+          <AssociationSet Name="MovementAbilityBattleforceStats" Association="Claymore.Models.MovementAbilityBattleforceStats">
+            <End Role="MovementAbility" EntitySet="MovementAbilities" />
+            <End Role="BattleforceStats" EntitySet="BattleforceStats" />
+          </AssociationSet>
+          <EntitySet Name="SpecialAbilities" EntityType="Claymore.Models.SpecialAbility" />
+          <EntitySet Name="BattleforceStatsSpecialAbilities" EntityType="Claymore.Models.BattleforceStatsSpecialAbility" />
+          <AssociationSet Name="BattleforceStatsSpecialAbilitySpecialAbility" Association="Claymore.Models.BattleforceStatsSpecialAbilitySpecialAbility">
+            <End Role="BattleforceStatsSpecialAbility" EntitySet="BattleforceStatsSpecialAbilities" />
+            <End Role="SpecialAbility" EntitySet="SpecialAbilities" />
+          </AssociationSet>
+          <AssociationSet Name="BattleforceStatsBattleforceStatsSpecialAbility" Association="Claymore.Models.BattleforceStatsBattleforceStatsSpecialAbility">
+            <End Role="BattleforceStats" EntitySet="BattleforceStats" />
+            <End Role="BattleforceStatsSpecialAbility" EntitySet="BattleforceStatsSpecialAbilities" />
+          </AssociationSet>
+          <AssociationSet Name="BattleMechModelBattleforceStats" Association="Claymore.Models.BattleMechModelBattleforceStats">
+            <End Role="BattleMechModel" EntitySet="BattleMechModels" />
+            <End Role="BattleforceStats" EntitySet="BattleforceStats" />
+          </AssociationSet>
+          <AssociationSet Name="BattleMechBattleMechModel" Association="Claymore.Models.BattleMechBattleMechModel">
+            <End Role="BattleMech" EntitySet="Equipments" />
+            <End Role="BattleMechModel" EntitySet="BattleMechModels" />
+          </AssociationSet>
+          <EntitySet Name="BattleMechBattleForceStatus" EntityType="Claymore.Models.BattleMechBattleForceStatus" />
+          <AssociationSet Name="BattleMechBattleForceStatusBattleMech" Association="Claymore.Models.BattleMechBattleForceStatusBattleMech">
+            <End Role="BattleMechBattleForceStatus" EntitySet="BattleMechBattleForceStatus" />
+            <End Role="BattleMech" EntitySet="Equipments" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Character">
           <Key>
@@ -587,6 +875,8 @@
           <NavigationProperty Name="XPAssets" Relationship="Claymore.Models.CharacterXPAsset" FromRole="Character" ToRole="XPAsset" />
           <NavigationProperty Name="Documents" Relationship="Claymore.Models.DocumentCharacter" FromRole="Character" ToRole="Document" />
           <NavigationProperty Name="CharacterOwnerships" Relationship="Claymore.Models.CharacterOwnershipCharacter" FromRole="Character" ToRole="CharacterOwnership" />
+          <NavigationProperty Name="Equipment" Relationship="Claymore.Models.Owner" FromRole="Character" ToRole="Equipment" />
+          <Property Name="NPC" Type="Boolean" Nullable="false" DefaultValue="False" />
         </EntityType>
         <EntityType Name="Session">
           <Key>
@@ -856,6 +1146,194 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Equipment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <NavigationProperty Name="Owner" Relationship="Claymore.Models.Owner" FromRole="Equipment" ToRole="Character" />
+          <Property Name="OwnerId" Type="Guid" Nullable="true" />
+          <Property Name="Quantity" Type="Double" Nullable="true" />
+        </EntityType>
+        <Association Name="Owner">
+          <End Type="Claymore.Models.Equipment" Role="Equipment" Multiplicity="*" />
+          <End Type="Claymore.Models.Character" Role="Character" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Character">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Equipment">
+              <PropertyRef Name="OwnerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="BattleMechModel">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="ModelNumber" Type="String" Nullable="false" />
+          <Property Name="ModelName" Type="String" Nullable="false" />
+          <NavigationProperty Name="BattleforceStat" Relationship="Claymore.Models.BattleMechModelBattleforceStats" FromRole="BattleMechModel" ToRole="BattleforceStats" />
+          <NavigationProperty Name="BattleMeches" Relationship="Claymore.Models.BattleMechBattleMechModel" FromRole="BattleMechModel" ToRole="BattleMech" />
+          <Property Name="Price" Type="Int32" Nullable="true" />
+        </EntityType>
+        <EntityType Name="BattleforceStats">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="Size" Type="Int32" Nullable="false" />
+          <Property Name="ShortRangeDamage" Type="Int32" Nullable="false" />
+          <Property Name="MediumRangeDamage" Type="Int32" Nullable="false" />
+          <Property Name="LongRangeDamage" Type="Int32" Nullable="false" />
+          <Property Name="OverheatValue" Type="Int32" Nullable="false" />
+          <Property Name="Armor" Type="Int32" Nullable="false" />
+          <Property Name="Structure" Type="Int32" Nullable="false" />
+          <Property Name="PV" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="MovementAbilities" Relationship="Claymore.Models.MovementAbilityBattleforceStats" FromRole="BattleforceStats" ToRole="MovementAbility" />
+          <NavigationProperty Name="BattleforceStatsSpecialAbilities" Relationship="Claymore.Models.BattleforceStatsBattleforceStatsSpecialAbility" FromRole="BattleforceStats" ToRole="BattleforceStatsSpecialAbility" />
+          <NavigationProperty Name="BattleMechModel" Relationship="Claymore.Models.BattleMechModelBattleforceStats" FromRole="BattleforceStats" ToRole="BattleMechModel" />
+        </EntityType>
+        <EntityType Name="MovementType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <Property Name="Suffix" Type="String" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MovementAbility">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <NavigationProperty Name="MovementType" Relationship="Claymore.Models.MovementAbilityMovementType" FromRole="MovementAbility" ToRole="MovementType" />
+          <Property Name="MovementTypeId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="BattleforceStat" Relationship="Claymore.Models.MovementAbilityBattleforceStats" FromRole="MovementAbility" ToRole="BattleforceStats" />
+          <Property Name="BattleforceStatsId" Type="Guid" Nullable="true" />
+          <Property Name="Amount" Type="Int32" Nullable="false" DefaultValue="0" />
+        </EntityType>
+        <Association Name="MovementAbilityMovementType">
+          <End Type="Claymore.Models.MovementAbility" Role="MovementAbility" Multiplicity="*" />
+          <End Type="Claymore.Models.MovementType" Role="MovementType" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="MovementType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MovementAbility">
+              <PropertyRef Name="MovementTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="MovementAbilityBattleforceStats">
+          <End Type="Claymore.Models.MovementAbility" Role="MovementAbility" Multiplicity="*" />
+          <End Type="Claymore.Models.BattleforceStats" Role="BattleforceStats" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="BattleforceStats">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MovementAbility">
+              <PropertyRef Name="BattleforceStatsId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="SpecialAbility">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="Code" Type="String" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <Property Name="Effect" Type="String" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BattleforceStatsSpecialAbility">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <NavigationProperty Name="SpecialAbility" Relationship="Claymore.Models.BattleforceStatsSpecialAbilitySpecialAbility" FromRole="BattleforceStatsSpecialAbility" ToRole="SpecialAbility" />
+          <Property Name="SpecialAbilityId" Type="Guid" Nullable="false" />
+          <Property Name="Parameter" Type="Int32" Nullable="true" />
+          <Property Name="ShortRange" Type="Int32" Nullable="true" />
+          <Property Name="MediumRange" Type="Int32" Nullable="true" />
+          <Property Name="LongRange" Type="Int32" Nullable="true" />
+          <NavigationProperty Name="BattleforceStat" Relationship="Claymore.Models.BattleforceStatsBattleforceStatsSpecialAbility" FromRole="BattleforceStatsSpecialAbility" ToRole="BattleforceStats" />
+          <Property Name="BattleforceStatsId" Type="Guid" Nullable="false" />
+        </EntityType>
+        <Association Name="BattleforceStatsSpecialAbilitySpecialAbility">
+          <End Type="Claymore.Models.BattleforceStatsSpecialAbility" Role="BattleforceStatsSpecialAbility" Multiplicity="*" />
+          <End Type="Claymore.Models.SpecialAbility" Role="SpecialAbility" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="SpecialAbility">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BattleforceStatsSpecialAbility">
+              <PropertyRef Name="SpecialAbilityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="BattleforceStatsBattleforceStatsSpecialAbility">
+          <End Type="Claymore.Models.BattleforceStats" Role="BattleforceStats" Multiplicity="1" />
+          <End Type="Claymore.Models.BattleforceStatsSpecialAbility" Role="BattleforceStatsSpecialAbility" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BattleforceStats">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BattleforceStatsSpecialAbility">
+              <PropertyRef Name="BattleforceStatsId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="BattleMechModelBattleforceStats">
+          <End Type="Claymore.Models.BattleMechModel" Role="BattleMechModel" Multiplicity="0..1" />
+          <End Type="Claymore.Models.BattleforceStats" Role="BattleforceStats" Multiplicity="0..1" />
+        </Association>
+        <EntityType Name="BattleMech" BaseType="Claymore.Models.Equipment" >
+          <NavigationProperty Name="Model" Relationship="Claymore.Models.BattleMechBattleMechModel" FromRole="BattleMech" ToRole="BattleMechModel" />
+          <Property Name="BattleMechModelId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="BattleMechBattleForceStatus" Relationship="Claymore.Models.BattleMechBattleForceStatusBattleMech" FromRole="BattleMech" ToRole="BattleMechBattleForceStatus" />
+        </EntityType>
+        <Association Name="BattleMechBattleMechModel">
+          <End Type="Claymore.Models.BattleMech" Role="BattleMech" Multiplicity="*" />
+          <End Type="Claymore.Models.BattleMechModel" Role="BattleMechModel" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="BattleMechModel">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BattleMech">
+              <PropertyRef Name="BattleMechModelId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="BattleMechBattleForceStatus">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="Timestamp" Type="DateTime" Nullable="false" />
+          <Property Name="Armor" Type="Int32" Nullable="false" DefaultValue="0" />
+          <Property Name="Structure" Type="Int32" Nullable="false" DefaultValue="0" />
+          <Property Name="EngineHits" Type="Int32" Nullable="false" DefaultValue="0" />
+          <Property Name="FireControlHits" Type="Int32" Nullable="false" DefaultValue="0" />
+          <Property Name="MPHits" Type="Int32" Nullable="false" DefaultValue="0" />
+          <Property Name="WeaponsHits" Type="Int32" Nullable="false" DefaultValue="0" />
+          <NavigationProperty Name="BattleMech" Relationship="Claymore.Models.BattleMechBattleForceStatusBattleMech" FromRole="BattleMechBattleForceStatus" ToRole="BattleMech" />
+          <Property Name="BattleMechId" Type="Guid" Nullable="false" />
+        </EntityType>
+        <Association Name="BattleMechBattleForceStatusBattleMech">
+          <End Type="Claymore.Models.BattleMechBattleForceStatus" Role="BattleMechBattleForceStatus" Multiplicity="*" />
+          <End Type="Claymore.Models.BattleMech" Role="BattleMech" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="BattleMech">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BattleMechBattleForceStatus">
+              <PropertyRef Name="BattleMechId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -868,6 +1346,7 @@
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="Birthdate" ColumnName="Birthdate" />
+          <ScalarProperty Name="NPC" ColumnName="NPC" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -1004,6 +1483,104 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="Equipments">
+      <EntityTypeMapping TypeName="IsTypeOf(Claymore.Models.Equipment)">
+        <MappingFragment StoreEntitySet="Equipments">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="OwnerId" ColumnName="OwnerId" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(Claymore.Models.BattleMech)">
+        <MappingFragment StoreEntitySet="Equipments_BattleMech">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="BattleMechModelId" ColumnName="BattleMechModelId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BattleMechModels">
+      <EntityTypeMapping TypeName="IsTypeOf(Claymore.Models.BattleMechModel)">
+        <MappingFragment StoreEntitySet="BattleMechModels">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ModelNumber" ColumnName="ModelNumber" />
+          <ScalarProperty Name="ModelName" ColumnName="ModelName" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BattleforceStats">
+      <EntityTypeMapping TypeName="IsTypeOf(Claymore.Models.BattleforceStats)">
+        <MappingFragment StoreEntitySet="BattleforceStats">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Size" ColumnName="Size" />
+          <ScalarProperty Name="ShortRangeDamage" ColumnName="ShortRangeDamage" />
+          <ScalarProperty Name="MediumRangeDamage" ColumnName="MediumRangeDamage" />
+          <ScalarProperty Name="LongRangeDamage" ColumnName="LongRangeDamage" />
+          <ScalarProperty Name="OverheatValue" ColumnName="OverheatValue" />
+          <ScalarProperty Name="Armor" ColumnName="Armor" />
+          <ScalarProperty Name="Structure" ColumnName="Structure" />
+          <ScalarProperty Name="PV" ColumnName="PV" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MovementTypes">
+      <EntityTypeMapping TypeName="IsTypeOf(Claymore.Models.MovementType)">
+        <MappingFragment StoreEntitySet="MovementTypes">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Suffix" ColumnName="Suffix" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MovementAbilities">
+      <EntityTypeMapping TypeName="IsTypeOf(Claymore.Models.MovementAbility)">
+        <MappingFragment StoreEntitySet="MovementAbilities">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="MovementTypeId" ColumnName="MovementTypeId" />
+          <ScalarProperty Name="BattleforceStatsId" ColumnName="BattleforceStatsId" />
+          <ScalarProperty Name="Amount" ColumnName="Amount" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SpecialAbilities">
+      <EntityTypeMapping TypeName="IsTypeOf(Claymore.Models.SpecialAbility)">
+        <MappingFragment StoreEntitySet="SpecialAbilities">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Effect" ColumnName="Effect" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BattleforceStatsSpecialAbilities">
+      <EntityTypeMapping TypeName="IsTypeOf(Claymore.Models.BattleforceStatsSpecialAbility)">
+        <MappingFragment StoreEntitySet="BattleforceStatsSpecialAbilities">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="SpecialAbilityId" ColumnName="SpecialAbilityId" />
+          <ScalarProperty Name="Parameter" ColumnName="Parameter" />
+          <ScalarProperty Name="ShortRange" ColumnName="ShortRange" />
+          <ScalarProperty Name="MediumRange" ColumnName="MediumRange" />
+          <ScalarProperty Name="LongRange" ColumnName="LongRange" />
+          <ScalarProperty Name="BattleforceStatsId" ColumnName="BattleforceStatsId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BattleMechBattleForceStatus">
+      <EntityTypeMapping TypeName="IsTypeOf(Claymore.Models.BattleMechBattleForceStatus)">
+        <MappingFragment StoreEntitySet="BattleMechBattleForceStatus">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Timestamp" ColumnName="Timestamp" />
+          <ScalarProperty Name="Armor" ColumnName="Armor" />
+          <ScalarProperty Name="Structure" ColumnName="Structure" />
+          <ScalarProperty Name="EngineHits" ColumnName="EngineHits" />
+          <ScalarProperty Name="FireControlHits" ColumnName="FireControlHits" />
+          <ScalarProperty Name="MPHits" ColumnName="MPHits" />
+          <ScalarProperty Name="WeaponsHits" ColumnName="WeaponsHits" />
+          <ScalarProperty Name="BattleMechId" ColumnName="BattleMechId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <AssociationSetMapping Name="Attendance" TypeName="Claymore.Models.Attendance" StoreEntitySet="Attendance">
       <EndProperty Name="Session">
         <ScalarProperty Name="Id" ColumnName="Sessions_Id" />
@@ -1019,6 +1596,15 @@
       <EndProperty Name="Session">
         <ScalarProperty Name="Id" ColumnName="Sessions_Id" />
       </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="BattleMechModelBattleforceStats" TypeName="Claymore.Models.BattleMechModelBattleforceStats" StoreEntitySet="BattleforceStats">
+      <EndProperty Name="BattleMechModel">
+        <ScalarProperty Name="Id" ColumnName="BattleMechModel_Id" />
+      </EndProperty>
+      <EndProperty Name="BattleforceStats">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+      <Condition ColumnName="BattleMechModel_Id" IsNull="false" />
     </AssociationSetMapping>
   </EntityContainerMapping>
 </Mapping></edmx:Mappings>

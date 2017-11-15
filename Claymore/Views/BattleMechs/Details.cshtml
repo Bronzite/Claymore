@@ -1,0 +1,77 @@
+﻿@using Claymore.Models
+@model BattleMech
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (Model.Name == "")
+{
+    <h1>@Model.Model.ModelNumber @Model.Model.ModelName</h1>
+}
+else
+{
+    <h1>@Model.Model.ModelNumber ""@Model.Name"" @Model.Model.ModelName</h1>
+}
+    
+<table class="table table-condensed">
+    <tr>
+        <td>Size</td>
+        <td>@Model.Model.BattleforceStat.Size </td>
+        <td>Movement</td>
+        <td>@Model.Model.BattleforceStat.MovementTypesString</td>
+        <td>OV</td>
+        <td>@Model.Model.BattleforceStat.OverheatValue </td>
+    </tr>
+    <tr>
+        <td>Short</td>
+        <td>@Model.Model.BattleforceStat.ShortRangeDamage </td>
+        <td>Medium</td>
+        <td>@Model.Model.BattleforceStat.MediumRangeDamage </td>
+        <td>Long</td>
+        <td>@Model.Model.BattleforceStat.LongRangeDamage </td>
+    </tr>
+    <tr>
+        <td>Armor</td>
+        <td colspan="5">
+            @for(int i=0;i<Model.Model.BattleforceStat.Armor;i++)
+            {
+                if (i <= Model.LatestStatus.Armor)
+                {
+                    <div class="glyphicon glyphicon-star"></div>
+                }
+                else
+                {
+                    <div class="glyphicon glyphicon-star-empty"></div>
+                }
+            }
+        </td>
+    </tr>
+    <tr>
+        <td>Structure</td>
+            <td colspan="5">
+        @for (int i = 0; i < Model.Model.BattleforceStat.Structure;i++)
+        {
+            if (i <= Model.LatestStatus.Structure)
+            {
+                <div class="glyphicon glyphicon-heart"></div>
+            }
+            else
+            {
+                <div class="glyphicon glyphicon-heart-empty"></div>
+            }
+        }
+        </td>
+    </tr>
+    <tr>
+        <td>Special Abilities</td>
+        <td colspan="5">
+            <ul>
+                @foreach (BattleforceStatsSpecialAbility bssa in Model.Model.BattleforceStat.BattleforceStatsSpecialAbilities)
+                {
+                    <li>@bssa.ToString()</li>
+                }
+            </ul>
+        </td>
+    </tr>
+</table>
+
